@@ -687,7 +687,7 @@ var _setAttribute = function(el, attribute, newValue) {
 /**
  * reveal public members
  */
-Æ = æ = aeonx = {
+Æ = aeonx = {
     run: $run,
     fetch: $fetch
 }
