@@ -5,40 +5,34 @@
  */
 
 /**
- * private data tree
+ * data tree
  */
 var _data = {
     ver: '0.1.1',
     debug: false,
     condOper: ['!=', '>=', '<=', '>', '<', '='], // add single char conditions at end of array
     ext: {},
-    // these internal *will* change names frequently, and without notice... 
-    priv: {
-        valuables: ['input'],
-        selectors: []
-    },
-    // ... as will these data store names.
-    proc: {
-        opts: {},
-        e: {},
-        eId: 0,
-        eData: {},
+    valuables: ['input'],
+    selectors: [],
+    opts: {},
+    e: {},
+    eId: 0,
+    eData: {},
+    sel: "",
+    eventType: "",
+    cond: {
+        raw: "",
         sel: "",
-        eventType: "",
-        cond: {
-            raw: "",
-            sel: "",
-            attr: "",
-            ext: "",
-            extReturn: null,
-            oper: "",
-            lft: "",
-            rgt: "",
-            result: null
-        },
-        src: {},
-        tar: {}
-    }
+        attr: "",
+        ext: "",
+        extReturn: null,
+        oper: "",
+        lft: "",
+        rgt: "",
+        result: null
+    },
+    src: {},
+    tar: {}
 }
 
 
@@ -67,14 +61,14 @@ var $fetch = function (path, success, error) {
  *
  */
 var $run = function(O, p, opts) {
-    if (p) { _data.priv.selectors.push(p); }
+    if (p) { _data.selectors.push(p); }
 
     for (var property in O) {
         var value      = O[property]
 
-        _data.proc.opts = opts
-        _data.proc.src.attr = value
-        _data.proc.tar.attr = property
+        _data.opts = opts
+        _data.src.attr = value
+        _data.tar.attr = property
 
         // Array?
         if (Array.isArray(value)) {
@@ -102,7 +96,7 @@ var $run = function(O, p, opts) {
             console.error('invalid value', value)
         }
     }
-    _data.priv.selectors.pop()
+    _data.selectors.pop()
 }
 
 /**
@@ -164,7 +158,7 @@ var _execObject = function(property, value) {
         _execRule(property, value)
     }
     else if (Object.keys(value).length > 0) {
-        $run(value, property, _data.proc.opts);    
+        $run(value, property, _data.opts);    
     }
 }
 
@@ -172,7 +166,7 @@ var _execObject = function(property, value) {
  *
  */
 var _execArray = function(property, value) {
-    newValue = _unstring(value[1], _data.proc.opts)
+    newValue = _unstring(value[1], _data.opts)
     newOperator = value[0]
     _set(property, newValue, newOperator)
 }
@@ -181,7 +175,7 @@ var _execArray = function(property, value) {
  *
  */
 var _execRule = function(property, value) {
-    var selector = _data.priv.selectors.join(' ')
+    var selector = _data.selectors.join(' ')
     // is a rule.  do not add this to selectors.
 
     // get `rule`
@@ -246,9 +240,9 @@ var _execIfRule = function (property, value) {
 // obtain the the left, op, and right from the condition
         var pieces = property.split('(')
         var pieces = pieces[1].split(')')
-        _data.proc.cond.raw = pieces[0].trim()
-        if ( _evalIf( _data.proc.cond.raw ) ) { 
-            $run(value, null, _data.proc.opts)
+        _data.cond.raw = pieces[0].trim()
+        if ( _evalIf( _data.cond.raw ) ) { 
+            $run(value, null, _data.opts)
         }
 }
 
@@ -257,10 +251,10 @@ var _execIfRule = function (property, value) {
  */
 var _execElseRule = function (value) {
     // obtain the the left, op, and right from the condition
-    if (_data.proc.cond.result === false) {
-        $run(value, null, _data.proc.opts)
+    if (_data.cond.result === false) {
+        $run(value, null, _data.opts)
     }
-    _data.proc.cond.result = null
+    _data.cond.result = null
 }
 
 
@@ -277,8 +271,8 @@ var _addListeners = function (eventType, eventCond, selector, value) {
 
         // stash the event data for later use (by saving key to new element attribute)
         var a = document.createAttribute( 'data-' + eventType + '-eid'  )
-        var eId = ++_data.proc.eId
-        _data.proc.eData[ eId ] = { aeon: newExec, condition: eventCond }
+        var eId = ++_data.eId
+        _data.eData[ eId ] = { aeon: newExec, condition: eventCond }
         a.value = eId
         els[i].setAttributeNode( a )
 
@@ -286,7 +280,7 @@ var _addListeners = function (eventType, eventCond, selector, value) {
             if (_data.debug) console.log(e)
             eAttr = 'data-' + e.type + '-eid'
             eId = e.target.getAttribute( eAttr )
-            eData = _data.proc.eData[ eId ]
+            eData = _data.eData[ eId ]
 
             var condResult = true
             if (eData.condition.lft) { 
@@ -322,45 +316,45 @@ var _addListeners = function (eventType, eventCond, selector, value) {
  *
  */
 var _evalIf = function (expression) {
-    result = false; // aka: _data.proc.cond.result
+    result = false; // aka: _data.cond.result
 
-    var withoutSel = _data.proc.cond.attr = expression
+    var withoutSel = _data.cond.attr = expression
                     
     // is extension-exec?
     if (withoutSel.charAt(0) == '$') {
         // extension-exec
-        _data.proc.cond.ext = withoutSel.substr(1)    
+        _data.cond.ext = withoutSel.substr(1)    
         // execute it
-        var ext = _data.ext[ _data.proc.cond.ext ]
+        var ext = _data.ext[ _data.cond.ext ]
         var e = {}
-        if (_data.proc.opts && _data.proc.opts.hasOwnProperty('e')) {
-            e = _data.proc.opts.e
+        if (_data.opts && _data.opts.hasOwnProperty('e')) {
+            e = _data.opts.e
         }
 
-        _data.proc.cond.extReturn = ext(e)
-        if (_data.proc.cond.extReturn === true) _data.proc.cond.result = true
+        _data.cond.extReturn = ext(e)
+        if (_data.cond.extReturn === true) _data.cond.result = true
     }
     else {
         // not extension-exec
-        if (_data.proc.cond.raw.indexOf('&') != -1) {
-            pieces = _data.proc.cond.raw.split('&')
-            _data.proc.cond.sel = pieces[0].trim()
-            _data.proc.cond.attr = withoutSel = pieces[1].trim()
+        if (_data.cond.raw.indexOf('&') != -1) {
+            pieces = _data.cond.raw.split('&')
+            _data.cond.sel = pieces[0].trim()
+            _data.cond.attr = withoutSel = pieces[1].trim()
         }    
 
         var trio = _parseCondition(withoutSel)
 
-        _data.proc.cond.lft = _get(_data.proc.cond.attr, _data.proc.cond.sel)
+        _data.cond.lft = _get(_data.cond.attr, _data.cond.sel)
 
-        console.log('get cond result from:', _data.proc.cond)
-        if (_data.proc.cond.oper) {
-            _data.proc.cond.result = _compare(_data.proc.cond.lft, _data.proc.cond.oper, _data.proc.cond.rgt)
+        console.log('get cond result from:', _data.cond)
+        if (_data.cond.oper) {
+            _data.cond.result = _compare(_data.cond.lft, _data.cond.oper, _data.cond.rgt)
         }
-        else if (_data.proc.cond.lft) {
-            _data.proc.cond.result = true
+        else if (_data.cond.lft) {
+            _data.cond.result = true
         }
 
-        result = _data.proc.cond.result
+        result = _data.cond.result
     }
 
     return result
@@ -379,10 +373,10 @@ var _parseCondition = function (condition) {
     for (var i=0; i < _data.condOper.length; i++ ) {
         if (condition.indexOf( _data.condOper[i] ) != -1) {
             if (_data.debug) console.log('found a conditional operator:', _data.condOper[i])
-            trio.oper = _data.proc.cond.oper = _data.condOper[i]
-            pieces = condition.split( _data.proc.cond.oper )
-            trio.lft = _data.proc.cond.attr = pieces[0].trim()
-            trio.rgt = _data.proc.cond.rgt = pieces[1].trim()
+            trio.oper = _data.cond.oper = _data.condOper[i]
+            pieces = condition.split( _data.cond.oper )
+            trio.lft = _data.cond.attr = pieces[0].trim()
+            trio.rgt = _data.cond.rgt = pieces[1].trim()
             break
         }
     }
@@ -426,7 +420,7 @@ var _unstring = function(value, opts) {
             }
 
             // if: extension-link
-            if (_data.proc.tar.attr.slice(0, 2) == 'on') {
+            if (_data.tar.attr.slice(0, 2) == 'on') {
                 value = 'return ' + parentName + '.' + value + '(event);'
             }
             // else: extension-exec or extension-value
@@ -466,8 +460,8 @@ var _unstring = function(value, opts) {
         else if (value.indexOf('&') != -1) {
             var values = value.split('&')
 
-            _data.proc.src.attr = values[1]
-            _data.proc.src.sel = values[0]
+            _data.src.attr = values[1]
+            _data.src.sel = values[0]
 
             value = _get(values[1], values[0], opts) 
         }
@@ -495,7 +489,7 @@ var _get = function(attribute, differentSelector, opts) {
         selector = differentSelector
     }
     else {
-        selector = _data.priv.selectors.join(' ')    
+        selector = _data.selectors.join(' ')    
     }
     
     if (opts && opts.hasOwnProperty('el')) {
@@ -508,7 +502,7 @@ var _get = function(attribute, differentSelector, opts) {
     if (el) {
         // attr or textcontent?
         tag = el.tagName.toLowerCase()
-        if (attribute == 'value' && _data.priv.valuables.indexOf(tag) === -1) { // use textcontent
+        if (attribute == 'value' && _data.valuables.indexOf(tag) === -1) { // use textcontent
             result = el.textContent
         }
         else { // attr, when a=value and tag=input
@@ -647,7 +641,7 @@ var _set = function(selatts, newValue, newOperator, opts) {
             attribute = pieces[1].trim()
         }
         else {
-            selector = _data.priv.selectors.join(' ')
+            selector = _data.selectors.join(' ')
             attribute = selatts
         }
 
@@ -674,7 +668,7 @@ var _set = function(selatts, newValue, newOperator, opts) {
  */
 var _setAttribute = function(el, attribute, newValue) {
     tag = el.tagName.toLowerCase()
-    if (attribute == 'value' && _data.priv.valuables.indexOf(tag) === -1) { 
+    if (attribute == 'value' && _data.valuables.indexOf(tag) === -1) { 
         el.textContent = newValue
     }
     else { // attr, when a=value and tag=input
