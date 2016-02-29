@@ -1,10 +1,7 @@
 /**
  * aeonx.js
  * `Controller for DOM Events and Attributes` 
- * example usage: aeonx.fetch('/aeon.json', aeonx.mix)
- * Public methods:
- * - fetch
- * - mix
+ * example usage: aeonx.fetch('/aeon.json', aeonx.run)
  */
 
 /**
@@ -69,7 +66,7 @@ var $fetch = function (path, success, error) {
 /**
  *
  */
-var $mix = function(O, p, opts) {
+var $run = function(O, p, opts) {
     if (p) { _data.priv.selectors.push(p); }
 
     for (var property in O) {
@@ -81,7 +78,7 @@ var $mix = function(O, p, opts) {
 
         // Array?
         if (Array.isArray(value)) {
-            _mixArray(property, value)
+            _execArray(property, value)
         }
     
         // String?
@@ -96,7 +93,7 @@ var $mix = function(O, p, opts) {
 
         // Plain Object?
         else if (typeof value == 'object' && value.constructor == Object) {
-            _mixObject(property, value)
+            _execObject(property, value)
         }
         else if (typeof value === 'boolean' || typeof value === 'number') {
             _set(property, value)    
@@ -162,19 +159,19 @@ var _compare = function(lft, oper, rgt, typecast) {
 /**
  *
  */
-var _mixObject = function(property, value) {
+var _execObject = function(property, value) {
     if (property.charAt(0) == '@') {
-        _mixRule(property, value)
+        _execRule(property, value)
     }
     else if (Object.keys(value).length > 0) {
-        $mix(value, property, _data.proc.opts);    
+        $run(value, property, _data.proc.opts);    
     }
 }
 
 /**
  *
  */
-var _mixArray = function(property, value) {
+var _execArray = function(property, value) {
     newValue = _unstring(value[1], _data.proc.opts)
     newOperator = value[0]
     _set(property, newValue, newOperator)
@@ -183,7 +180,7 @@ var _mixArray = function(property, value) {
 /**
  *
  */
-var _mixRule = function(property, value) {
+var _execRule = function(property, value) {
     var selector = _data.priv.selectors.join(' ')
     // is a rule.  do not add this to selectors.
 
@@ -212,13 +209,13 @@ var _mixRule = function(property, value) {
     }
 
     if (rule.substr(0, 2) == 'on') {
-        _mixOnRule(selector, value, rule, wholeConds, eventConds)
+        _execOnRule(selector, value, rule, wholeConds, eventConds)
     }
     else if (rule == 'if') {
-        _mixIfRule(property, value)
+        _execIfRule(property, value)
     }
     else if (rule == 'else') {
-        _mixElseRule(value)
+        _execElseRule(value)
     }
     else {
         console.error('bad rule', {rule: rule}); debugger
@@ -228,7 +225,7 @@ var _mixRule = function(property, value) {
 /**
  *
  */
-var _mixOnRule = function (selector, value, rule, wholeConds, eventConds){
+var _execOnRule = function (selector, value, rule, wholeConds, eventConds){
     
     if (rule != 'on') {
         // is @onEvent rule.
@@ -245,23 +242,23 @@ var _mixOnRule = function (selector, value, rule, wholeConds, eventConds){
 /**
  *
  */
-var _mixIfRule = function (property, value) {
+var _execIfRule = function (property, value) {
 // obtain the the left, op, and right from the condition
         var pieces = property.split('(')
         var pieces = pieces[1].split(')')
         _data.proc.cond.raw = pieces[0].trim()
         if ( _evalIf( _data.proc.cond.raw ) ) { 
-            $mix(value, null, _data.proc.opts)
+            $run(value, null, _data.proc.opts)
         }
 }
 
 /**
  *
  */
-var _mixElseRule = function (value) {
+var _execElseRule = function (value) {
     // obtain the the left, op, and right from the condition
     if (_data.proc.cond.result === false) {
-        $mix(value, null, _data.proc.opts)
+        $run(value, null, _data.proc.opts)
     }
     _data.proc.cond.result = null
 }
@@ -275,13 +272,13 @@ var _addListeners = function (eventType, eventCond, selector, value) {
     var els = document.querySelectorAll( selector )
 
     for (var i=0; i < els.length; i++ ) {
-        newMix = {}
-        newMix[selector] = value
+        newExec = {}
+        newExec[selector] = value
 
         // stash the event data for later use (by saving key to new element attribute)
         var a = document.createAttribute( 'data-' + eventType + '-eid'  )
         var eId = ++_data.proc.eId
-        _data.proc.eData[ eId ] = { aeon: newMix, condition: eventCond }
+        _data.proc.eData[ eId ] = { aeon: newExec, condition: eventCond }
         a.value = eId
         els[i].setAttributeNode( a )
 
@@ -311,7 +308,7 @@ var _addListeners = function (eventType, eventCond, selector, value) {
             
             if (condResult) { 
                 if (_data.debug) console.log('condition passed', {e:e, eData: eData})
-                $mix(eData.aeon, null, {el: e.target, e: e})
+                $run(eData.aeon, null, {el: e.target, e: e})
 
             }
             else {
@@ -697,6 +694,6 @@ var _setAttribute = function(el, attribute, newValue) {
  * reveal public members
  */
 Æ = æ = aeonx = {
-    mix: $mix,
+    run: $run,
     fetch: $fetch
 }
