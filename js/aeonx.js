@@ -1,7 +1,5 @@
 /**
  * aeonx.js
- * `Controller for DOM Events and Attributes` 
- * example usage: aeonx.fetch('/aeon.json', aeonx.run)
  */
 
 /**
