@@ -29,7 +29,7 @@ neww = {
 
 var operators = ['+', '-', 'x', '%']
 
-aeonx.ext.onClickEqFilter = function(e) {
+onClickEqFilter = function(e) {
 	var newValue = ''
 
 	// Get the input and button values
@@ -51,7 +51,7 @@ aeonx.ext.onClickEqFilter = function(e) {
 	return newValue
 }
 
-aeonx.ext.onClickDecimal = function(e) {
+onClickDecimal = function(e) {
 	result = ''
 
 	if(document.querySelector('.screen').innerHTML.indexOf('.') == -1) {
@@ -61,7 +61,7 @@ aeonx.ext.onClickDecimal = function(e) {
 	return result
 }
 
-aeonx.ext.onClickOperatorFilter = function(e) {
+onClickOperatorFilter = function(e) {
 	newOp = e.target.innerHTML
 
 	var screenEL = document.querySelector('.screen')
