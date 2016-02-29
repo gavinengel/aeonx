@@ -2,6 +2,8 @@
  * aeonx.js
  */
 
+// TODO: remove .ext property
+
 /**
  * data tree
  */
@@ -578,7 +580,7 @@ var _set = function(selatts, newValue, newOperator, opts) {
         // split on dot
         pieces = rawTarget.split('.')
 
-        // first, search in aenic.ext
+        // first, search in aeonx.ext
         extLink = _data.ext
         for (var i = 0; i < pieces.length-1; i++) {
 
