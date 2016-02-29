@@ -35,8 +35,8 @@ var $onClickDecimal = function(e) {
 var $onClickOperatorFilter = function(e) {
 	newOp = e.target.innerHTML
 
-	var screenEL = document.querySelector('.screen')
-	var screenVal = screenEL.innerHTML
+	var screen = document.querySelector('.screen')
+	var screenVal = screen.innerHTML
 	var lastChar = screenVal[screenVal.length - 1]
 	
 	// prevent ops on empty screen.
@@ -48,7 +48,7 @@ var $onClickOperatorFilter = function(e) {
 	else if(_operators.indexOf(lastChar) > -1 && screenVal.length > 1) {
 		// Here, '.' matches any character while $ denotes the end of string, 
 		// so anything (will be an operator in this case) at the end of string will get replaced by new operator
-		screenEL.innerHTML = screenVal.slice(0, -1);
+		screen.innerHTML = screenVal.slice(0, -1);
 
 	}
 
