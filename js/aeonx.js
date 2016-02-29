@@ -49,7 +49,7 @@ var _data = {
 /**
  *
  */
-var fetch = function (path, success, error) {
+var $fetch = function (path, success, error) {
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = function()
     {
@@ -69,7 +69,7 @@ var fetch = function (path, success, error) {
 /**
  *
  */
-var mix = function(O, p, opts) {
+var $mix = function(O, p, opts) {
     if (p) { _data.priv.selectors.push(p); }
 
     for (var property in O) {
@@ -167,7 +167,7 @@ var _mixObject = function(property, value) {
         _mixRule(property, value)
     }
     else if (Object.keys(value).length > 0) {
-        mix(value, property, _data.proc.opts);    
+        $mix(value, property, _data.proc.opts);    
     }
 }
 
@@ -251,7 +251,7 @@ var _mixIfRule = function (property, value) {
         var pieces = pieces[1].split(')')
         _data.proc.cond.raw = pieces[0].trim()
         if ( _evalIf( _data.proc.cond.raw ) ) { 
-            mix(value, null, _data.proc.opts)
+            $mix(value, null, _data.proc.opts)
         }
 }
 
@@ -261,7 +261,7 @@ var _mixIfRule = function (property, value) {
 var _mixElseRule = function (value) {
     // obtain the the left, op, and right from the condition
     if (_data.proc.cond.result === false) {
-        mix(value, null, _data.proc.opts)
+        $mix(value, null, _data.proc.opts)
     }
     _data.proc.cond.result = null
 }
@@ -311,7 +311,7 @@ var _addListeners = function (eventType, eventCond, selector, value) {
             
             if (condResult) { 
                 if (_data.debug) console.log('condition passed', {e:e, eData: eData})
-                mix(eData.aeon, null, {el: e.target, e: e})
+                $mix(eData.aeon, null, {el: e.target, e: e})
 
             }
             else {
@@ -411,13 +411,16 @@ var _unstring = function(value, opts) {
         else if (value.charAt(0) == '$') { 
             value = value.slice(1)
 
+            // split the string at `.`
+            var pieces = value.split('.');
+
             parent = {}
             parentName = ''
-            if (typeof _data.ext[value] != 'undefined') {
+            if (typeof _data.ext[ pieces[0] ] != 'undefined') {
                 parent = _data.ext
                 parentName = '_data.ext'
             }
-            else if (typeof window[value] != 'undefined') {
+            else if (typeof window[ pieces[0] ] != 'undefined') {
                 parent = window
                 parentName = 'window'
             }
@@ -431,9 +434,21 @@ var _unstring = function(value, opts) {
             }
             // else: extension-exec or extension-value
             else {
+                // TODO: refactor
+                if (pieces.length == 3) {
+                    var shortcut = parent[ pieces[0] ][ pieces[1] ][ pieces[2] ]
+                }
+                else if (pieces.length == 2) {
+                    var shortcut = parent[ pieces[0] ][ pieces[1] ]
+                }
+                else {
+                    // length is only 1
+                    var shortcut = parent[ pieces[0] ]
+                }
 
-                if (typeof parent[value] === 'function') {
-                    ext = parent[value]
+
+                if (typeof shortcut === 'function') {
+                    ext = shortcut
             
                     var e = {}
                     if (opts && opts.hasOwnProperty('e')) {
@@ -444,7 +459,7 @@ var _unstring = function(value, opts) {
                 }
                 // ... or if simple variable, get it
                 else {
-                    value = parent[value]
+                    value = shortcut
                 }
 
             }
@@ -682,6 +697,6 @@ var _setAttribute = function(el, attribute, newValue) {
  * reveal public members
  */
 Æ = æ = aeonx = {
-    mix: mix,
-    fetch: fetch
+    mix: $mix,
+    fetch: $fetch
 }

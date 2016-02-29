@@ -5,7 +5,6 @@ neww = {
 	pub: pub
 }
 
-
 // TODO: fix `0 bug`.  to replicate: 1-1, 0 is on screen.  then click and num.
 
 // TODO: 2 ifs fails:
@@ -27,9 +26,9 @@ neww = {
 
 //TODO 3.2 -3 = ?????
 
-var operators = ['+', '-', 'x', '%']
+var _operators = ['+', '-', 'x', '%']
 
-onClickEqFilter = function(e) {
+var $onClickEqFilter = function(e) {
 	var newValue = ''
 
 	// Get the input and button values
@@ -42,7 +41,7 @@ onClickEqFilter = function(e) {
 	equation = equation.replace(/x/g, '*').replace(/%/g, '/')
 		
 	// Final thing left to do is checking the last character of the equation. If it's an operator or a decimal, remove it
-	if(operators.indexOf(lastChar) > -1 || lastChar == '.')
+	if(_operators.indexOf(lastChar) > -1 || lastChar == '.')
 		equation = equation.replace(/.$/, '')
 		
 	if(equation)
@@ -51,7 +50,7 @@ onClickEqFilter = function(e) {
 	return newValue
 }
 
-onClickDecimal = function(e) {
+var $onClickDecimal = function(e) {
 	result = ''
 
 	if(document.querySelector('.screen').innerHTML.indexOf('.') == -1) {
@@ -61,7 +60,7 @@ onClickDecimal = function(e) {
 	return result
 }
 
-onClickOperatorFilter = function(e) {
+var $onClickOperatorFilter = function(e) {
 	newOp = e.target.innerHTML
 
 	var screenEL = document.querySelector('.screen')
@@ -74,7 +73,7 @@ onClickOperatorFilter = function(e) {
 	}
 	
 	// remove the last operator (if exists) from screen 
-	else if(operators.indexOf(lastChar) > -1 && screenVal.length > 1) {
+	else if(_operators.indexOf(lastChar) > -1 && screenVal.length > 1) {
 		// Here, '.' matches any character while $ denotes the end of string, 
 		// so anything (will be an operator in this case) at the end of string will get replaced by new operator
 		screenEL.innerHTML = screenVal.slice(0, -1);
@@ -82,4 +81,12 @@ onClickOperatorFilter = function(e) {
 	}
 
 	return newOp
+}
+
+
+
+Calculator = {
+	onClickEqFilter: $onClickEqFilter,
+	onClickDecimal: $onClickDecimal,
+ 	onClickOperatorFilter: $onClickOperatorFilter
 }

@@ -1,8 +1,13 @@
 {
 	"#calculator": {
+		".screen": {
+			"@onclick": {
+				"data-foo": "`$testr.foo`"
+			}
+		},
 		".eval": {
 			"@onclick": {
-				".screen & value": "`$onClickEqFilter`"
+				".screen & value": "`$Calculator.onClickEqFilter`"
 			}
 		},
 		".num": {
@@ -12,12 +17,12 @@
 		},
 		".dec": {
 			"@onclick": {
-				".screen & value": ["&", "`$onClickDecimal`"]
+				".screen & value": ["&", "`$Calculator.onClickDecimal`"]
 			}
 		},
 		".operator": {
 			"@onclick": {
-				".screen & value": ["&", "`$onClickOperatorFilter`"]	
+				".screen & value": ["&", "`$Calculator.onClickOperatorFilter`"]	
 			}
 		},
 		".clear": {
