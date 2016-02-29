@@ -676,7 +676,6 @@ var _setAttribute = function(el, attribute, newValue) {
             el.setAttributeNode(a)
         }
         else {
-            $( selector ).attr(attribute, newValue)        
             el.setAttribute(attribute, newValue)
         }
     }
