@@ -1,10 +1,5 @@
 {
 	"#calculator": {
-		".screen": {
-			"@onclick": {
-				"data-foo": "`$testr.foo`"
-			}
-		},
 		".eval": {
 			"@onclick": {
 				".screen & value": "`$Calculator.onClickEqFilter`"
