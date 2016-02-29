@@ -2,7 +2,7 @@
 	"#calculator": {
 		".eval": {
 			"@onclick": {
-				".screen & value": "`$Calculator.onClickEqFilter`"
+				".screen & value": "`$filters.equal`"
 			}
 		},
 		".num": {
@@ -12,12 +12,12 @@
 		},
 		".dec": {
 			"@onclick": {
-				".screen & value": ["&", "`$Calculator.onClickDecimal`"]
+				".screen & value": ["&", "`$filters.dot`"]
 			}
 		},
 		".operator": {
 			"@onclick": {
-				".screen & value": ["&", "`$Calculator.onClickOperatorFilter`"]	
+				".screen & value": ["&", "`$filters.operator`"]	
 			}
 		},
 		".clear": {

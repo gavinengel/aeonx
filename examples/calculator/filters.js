@@ -1,6 +1,6 @@
 var _operators = ['+', '-', 'x', '%']
 
-var $onClickEqFilter = function(e) {
+var $equal = function(e) {
 	var newValue = ''
 
 	// Get the input and button values
@@ -22,7 +22,7 @@ var $onClickEqFilter = function(e) {
 	return newValue
 }
 
-var $onClickDecimal = function(e) {
+var $dot = function(e) {
 	result = ''
 
 	if(document.querySelector('.screen').innerHTML.indexOf('.') == -1) {
@@ -32,7 +32,7 @@ var $onClickDecimal = function(e) {
 	return result
 }
 
-var $onClickOperatorFilter = function(e) {
+var $operator = function(e) {
 	newOp = e.target.innerHTML
 
 	var screen = document.querySelector('.screen')
@@ -57,8 +57,8 @@ var $onClickOperatorFilter = function(e) {
 
 
 
-Calculator = {
-	onClickEqFilter: $onClickEqFilter,
-	onClickDecimal: $onClickDecimal,
- 	onClickOperatorFilter: $onClickOperatorFilter
+filters = {
+	equal: $equal,
+	dot: $dot,
+ 	operator: $operator
 }
