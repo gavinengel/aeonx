@@ -7,9 +7,11 @@
 /**
  * data tree
  */
+
+var $debug = true
+
 var _data = {
     ver: '0.1.1',
-    debug: false,
     condOper: ['!=', '>=', '<=', '>', '<', '='], // add single char conditions at end of array
     ext: {},
     valuables: ['input'],
@@ -77,7 +79,7 @@ var $run = function(O, p, opts) {
     
         // String?
         else if (typeof value === 'string' || value instanceof String) {
-            _set(property, _unstring(value))
+            _set(property, _unstringExec(value))
         }
     
         // Function?
@@ -105,7 +107,7 @@ var $run = function(O, p, opts) {
 var _compare = function(lft, oper, rgt, typecast) {
     result = false
 
-    if (_data.debug) console.log({lft:lft, oper:oper, rgt:rgt})
+    if ($debug) console.log({lft:lft, oper:oper, rgt:rgt})
 
 
     typecast = typecast || typeof lft;
@@ -144,7 +146,7 @@ var _compare = function(lft, oper, rgt, typecast) {
             console.error('invalid oper', oper)
     }
 
-    if (_data.debug) console.log({lft:lft, oper:oper, rgt:rgt, result:result})
+    if ($debug) console.log({lft:lft, oper:oper, rgt:rgt, result:result})
 
     return result
 }
@@ -166,7 +168,7 @@ var _execObject = function(property, value) {
  *
  */
 var _execArray = function(property, value) {
-    newValue = _unstring(value[1], _data.opts)
+    newValue = _unstringExec(value[1], _data.opts)
     newOperator = value[0]
     _set(property, newValue, newOperator)
 }
@@ -277,7 +279,7 @@ var _addListeners = function (eventType, eventCond, selector, value) {
         els[i].setAttributeNode( a )
 
         els[i].addEventListener(eventType, function(e){
-            if (_data.debug) console.log(e)
+            if ($debug) console.log(e)
             eAttr = 'data-' + e.type + '-eid'
             eId = e.target.getAttribute( eAttr )
             eData = _data.eData[ eId ]
@@ -285,28 +287,28 @@ var _addListeners = function (eventType, eventCond, selector, value) {
             var condResult = true
             if (eData.condition.lft) { 
                 if (eData.condition.oper && eData.condition.rgt) {
-                    if (_data.debug) console.log('3 part condition found', {e:e, eData: eData})
+                    if ($debug) console.log('3 part condition found', {e:e, eData: eData})
 
                     condResult = _compare(e[eData.condition.lft], eData.condition.oper, eData.condition.rgt)
                 }    
                 else {
-                    if (_data.debug) console.log('1 part condition found', {e:e, eData: eData})
+                    if ($debug) console.log('1 part condition found', {e:e, eData: eData})
 
                     if (!e[eData.condition.lft]) condResult = false
                 }
             }
             else {
-                if (_data.debug) console.log('no event condition', eventCond)
+                if ($debug) console.log('no event condition', eventCond)
 
             }
             
             if (condResult) { 
-                if (_data.debug) console.log('condition passed', {e:e, eData: eData})
+                if ($debug) console.log('condition passed', {e:e, eData: eData})
                 $run(eData.aeon, null, {el: e.target, e: e})
 
             }
             else {
-                if (_data.debug) console.log('condition failed', {e:e, eData: eData})
+                if ($debug) console.log('condition failed', {e:e, eData: eData})
             }
         })
     }
@@ -372,7 +374,7 @@ var _parseCondition = function (condition) {
 
     for (var i=0; i < _data.condOper.length; i++ ) {
         if (condition.indexOf( _data.condOper[i] ) != -1) {
-            if (_data.debug) console.log('found a conditional operator:', _data.condOper[i])
+            if ($debug) console.log('found a conditional operator:', _data.condOper[i])
             trio.oper = _data.cond.oper = _data.condOper[i]
             pieces = condition.split( _data.cond.oper )
             trio.lft = _data.cond.attr = pieces[0].trim()
@@ -387,11 +389,22 @@ var _parseCondition = function (condition) {
 /**
  * 
  */
-var _unstring = function(value, opts) {
+var _unstring = function (value) {
     if ((typeof value === 'string' || value instanceof String) && value.charAt(0) == '`') {
         // if the VALUE is surrounded by `` marks, remove them.  It shouldn't be seen as a String.
         // remove ` from ends
         value = value.substr(1).slice(0, -1)
+    }
+
+    return value;
+}
+
+/**
+ * 
+ */
+var _unstringExec = function(value, opts) {
+    if ((typeof value === 'string' || value instanceof String) && value.charAt(0) == '`') {
+        value = _unstring(value)
 
         //// a) trigger event
         if (value.charAt(0) == '@') {
@@ -575,8 +588,8 @@ var _operate = function (selector, attribute, newOperator, newValue) {
 var _set = function(selatts, newValue, newOperator, opts) {
     
     // if a javascript element...
-    if (selatts.charAt(0) == '$') {
-        rawTarget = selatts.substr(1)
+    if (selatts.charAt(0) == '`' && selatts.charAt(1) == '$') {
+        rawTarget = _unstring(selatts).substr(1)
         // split on dot
         pieces = rawTarget.split('.')
 
@@ -687,6 +700,7 @@ var _setAttribute = function(el, attribute, newValue) {
  * reveal public members
  */
 Æ = æ = aeonx = {
+    debug: $debug,
     run: $run,
     fetch: $fetch
 }
