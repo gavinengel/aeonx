@@ -367,7 +367,7 @@ var _parseCondition = function (condition) {
     var trio = {
         lft: condition,
         oper: '',
-        rgt: '',
+        rgt: ''
     }
 
     for (var i=0; i < _data.condOper.length; i++ ) {
