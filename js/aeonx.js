@@ -8,7 +8,7 @@
  * data tree
  */
 
-var $debug = false
+var $debug = true
 
 var _data = {
     ver: '0.1.1',
