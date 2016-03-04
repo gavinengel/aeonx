@@ -58,11 +58,117 @@ var $fetch = function (path, success, error) {
     xhr.send()
 }
 
-
-var $runJson = function(string) {
-    var obj = JSON.parse(string)
+/**
+ *
+ */
+var $runAeon = function(str) {
+    var obj = _parseAeon(str)
     return $run(obj)
 }
+
+/**
+ *
+ */
+var $runJson = function(str) {
+    var obj = JSON.parse(str)
+    return $run(obj)
+}
+
+// version 0.0.2
+
+/**
+ *
+ */
+var _parseAeon = function(raw) {
+  // accept: aeon string ...
+  
+  /** tokenizer **/
+  var tokens = raw.match(/\S+/g)
+  var temp = []
+  for (var i = 0; i < tokens.length; i++ ) {
+    if (tokens[i].length > 2  && tokens[i].slice(-1) == ':') {
+        var begin = tokens[i].slice(0, -1);
+        temp.push(begin)
+        temp.push(":")
+    }
+    else {
+        temp.push(tokens[i])
+    }
+  }
+  tokens = temp
+
+  /** new string builder **/
+  var op1 = ''
+  var jsonString = ''
+  var isRighthand = false
+  for (var i = 0; i < tokens.length; i++ ) {
+    var token = tokens[i]
+
+    // wrap in quotes?
+    if (token == '{') {
+        token = ":" + token
+    }
+    else if (token == '}') {
+
+        token = token + ','
+    }
+    else if (token == ';') {
+
+        token = ","
+    }
+    else if (token == '&') {
+
+        //token = ","
+    }
+    else if (token == ':') {
+
+        isRighthand = true
+    }
+    else if (token.length == 2 && token.charAt(1) == ':') {
+
+        var op1 = token.charAt(0)
+        token = ': [ "' + op1 + '", '
+
+        isRighthand = true
+    }
+    else {
+        if (isRighthand) {
+            if (token.charAt(0) !== '"' && token.charAt(0) !== "'") {
+                token = '`' + token + '`'
+            }
+            isRighthand = false
+        }
+
+
+        if (token.charAt(0) == '$') {
+            token = '`' + token + '`'
+        }
+
+
+        token = '"' + token + '"'
+        if (op1.length) {
+            token = token + ']'
+            op1 = ''
+        }
+    }
+
+
+    jsonString = jsonString + token
+  }
+
+  // cheats: 
+  jsonString = "{"+jsonString+"}" 
+  jsonString = jsonString.replace(/"&"/g, ' & ')
+  //jsonString = jsonString.replace(/~QUOTE~/g, '"')
+  jsonString = jsonString.replace(/:""/g, '":"')
+  jsonString = jsonString.replace(/,}/g, '}')
+  jsonString = jsonString.replace(/"''"/g, '""')
+
+  var newObj = JSON.parse(jsonString)
+
+  return newObj
+}
+
 
 /**
  *
@@ -707,6 +813,7 @@ var _setAttribute = function(el, attribute, newValue) {
 aeonx = {
     debug: $debug,
     //run: $run,
+    runAeon: $runAeon,
     runJson: $runJson,
     fetch: $fetch
 }
