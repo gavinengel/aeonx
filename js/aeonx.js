@@ -552,7 +552,7 @@ var _operate = function (selector, attribute, newOperator, newValue) {
         case '%':
             newValue %= existingValue
             break
-        case '&':
+        case '.':
             newValue = existingValue.concat(newValue)
             break
         case '$':

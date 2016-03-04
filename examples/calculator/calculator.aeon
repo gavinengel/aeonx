@@ -6,17 +6,17 @@
 	}
 	.num {
 		@on(click) {
-			.screen & value &: value
+			.screen & value .: value
 		}
 	}
 	.dec {
 		@onclick {
-			.screen & value &: $filters.dot
+			.screen & value .: $filters.dot
 		}
 	}
 	.operator {
 		@onclick {
-			.screen & value &: $filters.operator	
+			.screen & value .: $filters.operator	
 		}
 	}
 	.clear {
