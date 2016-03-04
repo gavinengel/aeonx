@@ -96,6 +96,8 @@ var _parseAeon = function(raw) {
     }
   }
   tokens = temp
+  if ($debug) console.log({tokens: tokens})
+
 
   /** new string builder **/
   var op1 = ''
