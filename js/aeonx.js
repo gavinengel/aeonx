@@ -8,7 +8,7 @@
  * data tree
  */
 
-var $debug = true
+var $debug = false
 
 var _data = {
     ver: '0.1.1',
@@ -48,7 +48,7 @@ var $fetch = function (path, success, error) {
     {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
-                if (success) success(JSON.parse(xhr.responseText))
+                if (success) success(xhr.responseText)
             } else {
                 if (error) error(xhr)
             }
@@ -58,6 +58,11 @@ var $fetch = function (path, success, error) {
     xhr.send()
 }
 
+
+var $runJson = function(string) {
+    var obj = JSON.parse(string)
+    return $run(obj)
+}
 
 /**
  *
@@ -701,6 +706,7 @@ var _setAttribute = function(el, attribute, newValue) {
  */
 aeonx = {
     debug: $debug,
-    run: $run,
+    //run: $run,
+    runJson: $runJson,
     fetch: $fetch
 }
