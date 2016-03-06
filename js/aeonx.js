@@ -4,7 +4,7 @@
  * data tree
  */
 
-var $debug = false
+var $debug = true
 
 var _data = {
     ver: '0.1.1',
@@ -399,10 +399,11 @@ var _addListeners = function (eventType, eventCond, selector, value) {
         a.value = eId
         els[i].setAttributeNode( a )
 
+
         els[i].addEventListener(eventType, function(e){
             if ($debug) console.log(e)
             eAttr = 'data-' + e.type + '-eid'
-            eId = e.target.getAttribute( eAttr )
+            eId = e.currentTarget.getAttribute( eAttr )
             eData = _data.eData[ eId ]
 
             var condResult = true
@@ -425,7 +426,7 @@ var _addListeners = function (eventType, eventCond, selector, value) {
             
             if (condResult) { 
                 if ($debug) console.log('condition passed', {e:e, eData: eData})
-                $run(eData.aeon, null, {el: e.target, e: e})
+                $run(eData.aeon, null, {el: e.currentTarget, e: e})
 
             }
             else {

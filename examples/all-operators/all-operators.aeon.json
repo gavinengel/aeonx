@@ -1,0 +1,12 @@
+{
+	"#app": {
+	  "@onclick": {
+	    "#sum .eq & value": ["+", "`value`"],
+	    "#minus .eq & value": ["-", 2],
+	    "#multiply .eq & value": ["*", 2],
+	    "#divide .eq & value": ["/", 2],
+	    "#modulus .eq & value": ["%", 2],
+	    "#concat .eq & value": [".", 2]
+	  }
+	}
+}
