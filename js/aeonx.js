@@ -595,10 +595,10 @@ var _unstringExec = function(value, opts) {
         else if (value.indexOf('&') != -1) {
             var values = value.split('&')
 
-            _data.src.attr = values[1]
-            _data.src.sel = values[0]
+            _data.src.attr = values[1].trim()
+            _data.src.sel = values[0].trim()
 
-            value = _get(values[1], values[0], opts) 
+            value = _get(_data.src.attr, _data.src.sel) 
         }
         // c) empty or attribute from same selector:         data-foo
         else {
@@ -660,19 +660,21 @@ var _operate = function (selector, attribute, newOperator, newValue) {
     var existingValue = _get(attribute, selector)
     switch(newOperator) {
         case '+':
-            newValue += existingValue
+            newValue = parseFloat(newValue) | 0
+            existingValue = parseFloat(existingValue) | 0 
+            newValue += existingValue 
             break
         case '-':
-            newValue -= existingValue
+            newValue = parseFloat(newValue) - parseFloat(existingValue)
             break
         case '*':
-            newValue *= existingValue
+            newValue = parseFloat(newValue) * parseFloat(existingValue)
             break
         case '/':
-            newValue /= existingValue
+            newValue = parseFloat(newValue) / parseFloat(existingValue)
             break
         case '%':
-            newValue %= existingValue
+            newValue = parseFloat(newValue) % parseFloat(existingValue)
             break
         case '.':
             newValue = existingValue.concat(newValue)
