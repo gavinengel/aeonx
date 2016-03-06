@@ -77,14 +77,17 @@ var _tokenize = function (raw) {
 
 
   /** tokenizer **/
+    ///raw = raw.replace(/;/g, "\n")
+
   var tokens = raw.match(/\S+/g)
-  if ($debug) console.log({tokens: tokens})
+  if ($debug) console.log({tokens1: tokens})
 
   // TODO: integrate following block into previous RegExp.match
   // pop the biop (ex: .:, +:, *:) off the end of some tokens, add to new token
   var temp = []
   var len = tokens.length
   for (var i = 0; i < len; i++ ) {
+    
     if (tokens[i].length > 2  && tokens[i].slice(-1) == ':') {
         temp.push( tokens[i].match(/\w+/).shift() ) // first, add text
         temp.push( tokens[i].match(/\W+/).shift() ) // last, add biop
@@ -94,6 +97,50 @@ var _tokenize = function (raw) {
     }
   }
   tokens = temp
+  if ($debug) console.log({tokens2: tokens})
+/*
+// TODO: integrate following block into previous RegExp.match
+  // connect together the selatts
+  var temp = []
+  var len = tokens.length
+  var addToPrev = false
+  for (var i = 0; i < len; i++ ) {
+    
+    if (addToPrev) {
+        prev = temp.pop()
+        temp.push( prev + tokens[i] )
+        addToPrev = false
+    }
+    else if (tokens[i] == '&') {
+        // add this to previous token, also add flag to add next to previous token as well
+        prev = temp.pop()
+        temp.push( prev + ' & ' )
+        addToPrev = true 
+    }
+    else {
+        temp.push(tokens[i])
+    }
+  }
+  tokens = temp
+*/
+
+// TODO: integrate following block into previous RegExp.match
+  // detach ; from ends of `rights`
+  var temp = []
+  var len = tokens.length
+  for (var i = 0; i < len; i++ ) {
+    
+    if (tokens[i].slice(-1) == ';') {
+        temp.push( tokens[i].slice(0, -1) )  
+        temp.push( ';' ) 
+    }
+    else {
+        temp.push(tokens[i])
+    }
+  }
+  tokens = temp
+
+  if ($debug) console.log({tokens3: tokens})
 
   return tokens;
 }

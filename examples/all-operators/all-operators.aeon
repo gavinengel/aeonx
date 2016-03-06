@@ -1,0 +1,12 @@
+#app {
+  @onclick {
+    #sum .eq & value+: #sum .right & value;
+    #minus .eq & value-: #minus .right & value;
+    #multiply .eq & value*: #multiply .right & value;
+    #divide .eq & value/: #divide .right & value;
+    #modulus .eq & value%: #modulus .right & value;
+    #concat .eq & value.: #concat .right & value;
+    #toggle .eq & class!: #toggle .right & value;
+  }
+}
+
