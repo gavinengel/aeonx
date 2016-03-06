@@ -662,19 +662,27 @@ var _operate = function (selector, attribute, newOperator, newValue) {
         case '+':
             newValue = parseFloat(newValue) | 0
             existingValue = parseFloat(existingValue) | 0 
-            newValue += existingValue 
+            newValue = existingValue + newValue 
             break
         case '-':
-            newValue = parseFloat(newValue) - parseFloat(existingValue)
+            newValue = parseFloat(newValue) | 0
+            existingValue = parseFloat(existingValue) | 0
+            newValue = existingValue - newValue 
             break
         case '*':
-            newValue = parseFloat(newValue) * parseFloat(existingValue)
+            newValue = parseFloat(newValue) | 0
+            existingValue = parseFloat(existingValue) | 0
+            newValue = existingValue * newValue 
             break
         case '/':
-            newValue = parseFloat(newValue) / parseFloat(existingValue)
+            newValue = parseFloat(newValue) | 0
+            existingValue = parseFloat(existingValue) | 0
+            newValue = existingValue / newValue 
             break
         case '%':
-            newValue = parseFloat(newValue) % parseFloat(existingValue)
+            newValue = parseFloat(newValue) | 0
+            existingValue = parseFloat(existingValue) | 0
+            newValue = existingValue % newValue 
             break
         case '.':
             newValue = existingValue.concat(newValue)
