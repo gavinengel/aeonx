@@ -1,14 +1,10 @@
-/**
- * aeonx.js
- */
-
 // TODO: remove .ext property
 
 /**
  * data tree
  */
 
-var $debug = true
+var $debug = false
 
 var _data = {
     ver: '0.1.1',
@@ -62,7 +58,7 @@ var $fetch = function (path, success, error) {
  *
  */
 var $runAeon = function(str) {
-    var obj = _parseAeon(str)
+    var obj = aeont.parse(str)
     return $run(obj)
 }
 
@@ -74,32 +70,43 @@ var $runJson = function(str) {
     return $run(obj)
 }
 
-// version 0.0.2
 
-/**
- *
- */
-var _parseAeon = function(raw) {
-  // accept: aeon string ...
-  
+
+
+var _tokenize = function (raw) {
+
+
   /** tokenizer **/
   var tokens = raw.match(/\S+/g)
+  if ($debug) console.log({tokens: tokens})
+
+  // TODO: integrate following block into previous RegExp.match
+  // pop the biop (ex: .:, +:, *:) off the end of some tokens, add to new token
   var temp = []
-  for (var i = 0; i < tokens.length; i++ ) {
+  var len = tokens.length
+  for (var i = 0; i < len; i++ ) {
     if (tokens[i].length > 2  && tokens[i].slice(-1) == ':') {
-        var begin = tokens[i].slice(0, -1);
-        temp.push(begin)
-        temp.push(":")
+        temp.push( tokens[i].match(/\w+/).shift() ) // first, add text
+        temp.push( tokens[i].match(/\W+/).shift() ) // last, add biop
     }
     else {
         temp.push(tokens[i])
     }
   }
   tokens = temp
+
+  return tokens;
+}
+
+var $parse = function(raw) {
+  // accept: aeon string ...
+  
+
+  tokens = _tokenize(raw)
   if ($debug) console.log({tokens: tokens})
 
 
-  /** new string builder **/
+  /** json string builder from tokens **/
   var op1 = ''
   var jsonString = ''
   var isRighthand = false
@@ -166,6 +173,7 @@ var _parseAeon = function(raw) {
   jsonString = jsonString.replace(/,}/g, '}')
   jsonString = jsonString.replace(/"''"/g, '""')
 
+  if ($debug) console.log(jsonString)
   var newObj = JSON.parse(jsonString)
 
   return newObj
@@ -810,7 +818,7 @@ var _setAttribute = function(el, attribute, newValue) {
 }
 
 /**
- * reveal public members
+ * 
  */
 aeonx = {
     debug: $debug,
@@ -818,4 +826,11 @@ aeonx = {
     runAeon: $runAeon,
     runJson: $runJson,
     fetch: $fetch
+}
+
+/**
+ * 
+ */
+aeont = {
+    parse: $parse
 }
