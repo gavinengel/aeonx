@@ -145,11 +145,40 @@ var _tokenize = function (raw) {
   return tokens;
 }
 
+var _grouper = function (tokens) {
+
+    groups = []
+    combined = ''
+    len = tokens.length
+    
+    for ( var i = 0; i < len; i++ ) {
+        if (
+            (tokens[i].length == 2 && tokens[i].charAt(1) == ':') || 
+            (['{', '}', ':', ';'].indexOf( tokens[i] ) != -1)
+        ) {
+            if (combined) groups.push( combined.trim() )
+            combined = ''
+            groups.push( tokens[i] )
+        }
+        else {
+
+            combined = combined + " " + tokens[i]
+        }
+    }
+
+    console.log('groups', groups)
+    return groups
+}
+
+
 var $parse = function(raw) {
   // accept: aeon string ...
   
 
   tokens = _tokenize(raw)
+  tokens = _grouper(tokens)
+
+
   if ($debug) console.log({tokens: tokens})
 
 
@@ -157,34 +186,43 @@ var $parse = function(raw) {
   var op1 = ''
   var jsonString = ''
   var isRighthand = false
+  var isLefthand = false
+  debugger
   for (var i = 0; i < tokens.length; i++ ) {
     var token = tokens[i]
 
     // wrap in quotes?
     if (token == '{') {
-        token = ":" + token
+        isLefthand = false
+        token = '":' + token
     }
     else if (token == '}') {
 
         token = token + ','
+
     }
     else if (token == ';') {
 
         token = ","
+        isRighthand = false
+        isLefthand = false
+
+
     }
     else if (token == '&') {
 
         //token = ","
     }
     else if (token == ':') {
-
+        isLefthand = false
         isRighthand = true
+        token = '"' + token
     }
     else if (token.length == 2 && token.charAt(1) == ':') {
 
         var op1 = token.charAt(0)
-        token = ': [ "' + op1 + '", '
-
+        token = '": [ "' + op1 + '", '
+        isLefthand = false
         isRighthand = true
     }
     else {
@@ -201,10 +239,19 @@ var $parse = function(raw) {
         }
 
 
-        token = '"' + token + '"'
+        if (!isLefthand) {
+            token = '"' + token
+            isLefthand = true
+        }
+        else {
+            token = '^ ' + token
+        }
+
         if (op1.length) {
-            token = token + ']'
+            token = token + '"]'
             op1 = ''
+                        isRighthand = false
+
         }
     }
 
