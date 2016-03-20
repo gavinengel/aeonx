@@ -1,0 +1,5 @@
+.todoapp {
+  @onclick {
+    data-foo: 1;
+  }
+}

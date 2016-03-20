@@ -197,7 +197,7 @@ var $parse = function(raw) {
         token = '":' + token
     }
     else if (token == '}') {
-
+        if (isRighthand) { token =  '"' + token; isRighthand = false; } 
         token = token + ','
 
     }
@@ -244,7 +244,7 @@ var $parse = function(raw) {
             isLefthand = true
         }
         else {
-            token = '^ ' + token
+            token = ' ' + token
         }
 
         if (op1.length) {
@@ -294,7 +294,7 @@ var $run = function(O, p, opts) {
     
         // String?
         else if (typeof value === 'string' || value instanceof String) {
-            _set(property, _unstringExec(value))
+            _set(property, _unstringExec(value, _data.opts))
         }
     
         // Function?
