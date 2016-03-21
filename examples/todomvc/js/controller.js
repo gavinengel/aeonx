@@ -1,5 +1,3 @@
-(function (window) {
-	'use strict';
 
 	/**
 	 * Takes a model and view and acts as the controller between them
@@ -29,17 +27,17 @@
 			self.editItemCancel(item.id);
 		});
 
-		self.view.bind('itemRemove', function (item) {
-			self.removeItem(item.id);
-		});
+		//customedit//self.view.bind('itemRemove', function (item) {
+			//customedit//self.removeItem(item.id);
+		//customedit//});
 
 		self.view.bind('itemToggle', function (item) {
 			self.toggleComplete(item.id, item.completed);
 		});
 
-		self.view.bind('removeCompleted', function () {
-			self.removeCompletedItems();
-		});
+		//customedit//self.view.bind('removeCompleted', function () {
+			//customedit//self.removeCompletedItems();
+		//customedit//});
 
 		self.view.bind('toggleAll', function (status) {
 			self.toggleAll(status.completed);
@@ -149,12 +147,12 @@
 	 * storage
 	 */
 	Controller.prototype.removeItem = function (id) {
-		///var self = this;
-		///self.model.remove(id, function () {
-		///	self.view.render('removeItem', id);
-		///});
+		var self = this;
+		self.model.remove(id, function () {
+			self.view.render('removeItem', id);
+		});
 
-		///self._filter();
+		self._filter();
 	};
 
 	/**
@@ -267,4 +265,3 @@
 	// Export to window
 	window.app = window.app || {};
 	window.app.Controller = Controller;
-})(window);

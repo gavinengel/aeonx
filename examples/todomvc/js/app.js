@@ -1,6 +1,3 @@
-/*global app, $on */
-(function () {
-	'use strict';
 
 	/**
 	 * Sets up a brand new Todo list.
@@ -22,4 +19,6 @@
 	}
 	$on(window, 'load', setView);
 	$on(window, 'hashchange', setView);
-})();
+
+
+console.log({todo:todo})

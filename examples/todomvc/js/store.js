@@ -1,6 +1,3 @@
-/*jshint eqeqeq:false */
-(function (window) {
-	'use strict';
 
 	/**
 	 * Creates a new client side storage object and will create an empty
@@ -137,4 +134,3 @@
 	// Export to window
 	window.app = window.app || {};
 	window.app.Store = Store;
-})(window);

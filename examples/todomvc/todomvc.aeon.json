@@ -1,13 +1,13 @@
 {
   ".todoapp": {
-    "li label": {
-      "@ondblclick": {
-        "data-foo": "`$testr`"
-      }
-    },
     ".destroy": {
       "@onclick": {
-        "data-destroyed": "`$Handler.destroy`"
+        "data-destroy": "`$Handler.destroy`"
+      }
+    },
+    ".clear-completed": {
+      "@onclick": {
+        "data-clear-completed": "`$Handler.clearCompleted`"
       }
     }
   }

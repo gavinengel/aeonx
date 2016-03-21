@@ -1,7 +1,3 @@
-/*global qs, qsa, $on, $parent, $delegate */
-
-(function (window) {
-	'use strict';
 
 	/**
 	     * View that abstracts away the browser's DOM completely.
@@ -216,4 +212,3 @@
 	// Export to window
 	window.app = window.app || {};
 	window.app.View = View;
-}(window));
