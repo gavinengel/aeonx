@@ -4,11 +4,12 @@
  * data tree
  */
 
-var $debug = true
+var $debug = false
 
 var _data = {
-    ver: '0.1.1',
+    ver: '0.1.2',
     condOper: ['!=', '>=', '<=', '>', '<', '='], // add single char conditions at end of array
+    preOps: [ '+', '-', '*', '/', '%', '.', '$', '!' ], // may be used before colon to form special operator
     ext: {},
     valuables: ['input'],
     selectors: [],
@@ -88,9 +89,24 @@ var _tokenize = function (raw) {
   var len = tokens.length
   for (var i = 0; i < len; i++ ) {
     
-    if (tokens[i].length > 2  && tokens[i].slice(-1) == ':') {
-        temp.push( tokens[i].match(/\w+/).shift() ) // first, add text
-        temp.push( tokens[i].match(/\W+/).shift() ) // last, add biop
+    if (tokens[i].slice(-1) == ':') {
+        //bad//temp.push( tokens[i].match(/\w+/).shift() ) // first, add text
+        //bad//temp.push( tokens[i].match(/\W+/).shift() ) // last, add biop
+        withoutColon = tokens[i].slice(0, -1); // remove the ":" from end
+        preOp = '';
+        withoutOp = withoutColon;
+
+        // is the current last char a preOp char?  
+        lastChar = withoutColon.slice(-1);
+        if (_data.preOps.indexOf( lastChar ) != -1) {
+            // yes it is.  remove it
+            preOp = withoutColon.slice(-1);
+            withoutOp = withoutColon.slice(0, -1);
+        }
+        op = preOp + ':';
+        temp.push(withoutOp);
+        temp.push(op);
+
     }
     else {
         temp.push(tokens[i])
@@ -145,6 +161,9 @@ var _tokenize = function (raw) {
   return tokens;
 }
 
+/**
+ * this fn makes sure that operators are stuck together
+ */
 var _grouper = function (tokens) {
 
     groups = []
@@ -166,108 +185,161 @@ var _grouper = function (tokens) {
         }
     }
 
-    console.log('groups', groups)
     return groups
 }
 
+var _categorizer = function(tokens) {
+    cats = []
+
+    if (tokens) {
+        prev = ''
+        next = ''
+        // determine key, lft, rgt, mid, par
+        for (var i = 0; i < tokens.length; i++ ) {
+            token = tokens[i]
+            next = tokens[i+1]
+            each = {
+                tok: token,
+                //cat: null,
+                pos: null,
+                //opr: null
+                next: next,
+                prev: prev,
+                unstr: null
+            }
+
+            //##if (token == '{' || token == '}') each.cat = 'fin';
+
+            // key
+            if (prev == '') {
+                each.pos = 'key';
+            } else if (prev == '{' && next == '{') {
+                each.pos = 'key';
+
+            } else if (prev == '}' && next == '{') {
+                each.pos = 'key';
+            }
+
+            // par
+            if (token == '}' || token == '{') {
+                each.pos = 'par';
+            } 
+
+            // left: if prev == {
+            if (!each.pos) {
+                if (prev == '{') {
+                    each.pos = 'lft';
+                }
+            }
+
+            // middle
+            if (_isOperator(token)) {
+                each.pos = 'mid';
+            }
+
+            // right
+            if (_isOperator(prev)) {
+                each.pos = 'rgt';
+            }    
+
+            // unstr
+            if (each.pos == 'rgt') {
+                first = each.tok.charAt(0) 
+                if ( first == '$' || ( first != '"' && first != "'" ) ) {
+                    each.unstr = true
+                }
+            }
+
+            prev = each.tok;
+            cats.push(each)
+        }
+    }
+
+    return cats
+}
+
+var _stringizer = function(cats) {
+    var jsonString = ''
+
+    if (cats) {
+
+      var openArray = false
+      for (var i = 0; i < cats.length; i++ ) {
+        cat = cats[i]
+
+        if (cat.pos == 'par') {
+            jsonString = jsonString + cat.tok
+
+            // add comma?
+            if (cat.tok == '}' && cat.next && cat.next != '}') {
+                jsonString = jsonString + ','
+            }
+        } else if (cat.pos == 'key') {
+            jsonString = jsonString + '"' + cat.tok + '":'
+        } else if (cat.pos == 'lft') {
+            if (cat.unstr)
+                jsonString = jsonString + '"`' + cat.tok + '`"'
+            else
+                jsonString = jsonString + '"' + cat.tok + '"'
+        } else if (cat.pos == 'mid') {
+            if (cat.tok == ':') {
+                jsonString = jsonString + ':'
+            } else {
+                jsonString = jsonString + ': ["' + cat.tok.charAt(0) + '",'  
+                openArray = true       
+            }
+        } else if (cat.pos == 'rgt') {
+            if (cat.tok == '""' || cat.tok == "''") {
+                jsonString = jsonString + '""'
+            } else {
+
+                if (cat.unstr)
+                    jsonString = jsonString + '"`' + cat.tok + '`"'
+                else
+                    jsonString = jsonString + '"' + cat.tok + '"' 
+            }
+
+            if (openArray) {
+                jsonString = jsonString + ']'
+                openArray = false
+            }
+        }
+      }
+      jsonString = "\t{" + jsonString + "}\t"
+
+    }
+
+  return jsonString
+}
+
+var _isOperator = function(token) {
+    result = false;
+
+    if (token) {
+        if (token == ':') {
+            result = true;
+        }
+        else if (token.length == 2) {
+            for ( var i = 0; i < _data.preOps.length; i++ ) {
+                op = _data.preOps[i] + ':'
+                if (token == op) {
+                    result = true
+                    break
+                }
+            }
+        }
+    }
+
+    return result;
+}
 
 var $parse = function(raw) {
-  // accept: aeon string ...
-  
 
-  tokens = _tokenize(raw)
-  tokens = _grouper(tokens)
+  pretokens = _tokenize(raw)
+  tokens = _grouper(pretokens)
+  cats = _categorizer(tokens)
+  jsonString = _stringizer(cats)
 
-
-  if ($debug) console.log({tokens: tokens})
-
-
-  /** json string builder from tokens **/
-  var op1 = ''
-  var jsonString = ''
-  var isRighthand = false
-  var isLefthand = false
-  debugger
-  for (var i = 0; i < tokens.length; i++ ) {
-    var token = tokens[i]
-
-    // wrap in quotes?
-    if (token == '{') {
-        isLefthand = false
-        token = '":' + token
-    }
-    else if (token == '}') {
-        if (isRighthand) { token =  '"' + token; isRighthand = false; } 
-        token = token + ','
-
-    }
-    else if (token == ';') {
-
-        token = ","
-        isRighthand = false
-        isLefthand = false
-
-
-    }
-    else if (token == '&') {
-
-        //token = ","
-    }
-    else if (token == ':') {
-        isLefthand = false
-        isRighthand = true
-        token = '"' + token
-    }
-    else if (token.length == 2 && token.charAt(1) == ':') {
-
-        var op1 = token.charAt(0)
-        token = '": [ "' + op1 + '", '
-        isLefthand = false
-        isRighthand = true
-    }
-    else {
-        if (isRighthand) {
-            if (token.charAt(0) !== '"' && token.charAt(0) !== "'") {
-                token = '`' + token + '`'
-            }
-            isRighthand = false
-        }
-
-
-        if (token.charAt(0) == '$') {
-            token = '`' + token + '`'
-        }
-
-
-        if (!isLefthand) {
-            token = '"' + token
-            isLefthand = true
-        }
-        else {
-            token = ' ' + token
-        }
-
-        if (op1.length) {
-            token = token + '"]'
-            op1 = ''
-                        isRighthand = false
-
-        }
-    }
-
-
-    jsonString = jsonString + token
-  }
-
-  // cheats: 
-  jsonString = "{"+jsonString+"}" 
-  jsonString = jsonString.replace(/"&"/g, ' & ')
-  //jsonString = jsonString.replace(/~QUOTE~/g, '"')
-  jsonString = jsonString.replace(/:""/g, '":"')
-  jsonString = jsonString.replace(/,}/g, '}')
-  jsonString = jsonString.replace(/"''"/g, '""')
-
-  if ($debug) console.log(jsonString)
   var newObj = JSON.parse(jsonString)
 
   return newObj
