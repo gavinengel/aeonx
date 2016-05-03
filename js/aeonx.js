@@ -796,7 +796,7 @@ var _get = function(attribute, differentSelector, opts) {
     if (el) {
         // attr or textcontent?
         tag = el.tagName.toLowerCase()
-        if (attribute == 'value' && tag == 'input') { // use textcontent
+        if (attribute == 'value' && tag != 'input') { // use textcontent
             result = el.textContent
         }
         else { // attr, when a=value and tag=input
@@ -952,7 +952,7 @@ var _set = function(selatts, newValue, newOperator, opts) {
  */
 var _setAttribute = function(el, attribute, newValue) {
     tag = el.tagName.toLowerCase()
-    if (attribute == 'value' && tag == 'input') { 
+    if (attribute == 'value' && tag != 'input') { 
         el.textContent = newValue
     }
     else { // attr, when a=value and tag=input

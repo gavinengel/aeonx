@@ -19,6 +19,13 @@ var $equal = function(e) {
 	if(equation)
 		newValue = eval(equation)
 
+	// fix for: http://stackoverflow.com/questions/1458633/how-to-deal-with-floating-point-number-precision-in-javascript
+	// 3.2 - 3 = 0.20000000000000018
+	// 1.2 - 1 = 0.19999999999999996
+	big10 = 1000000000000000
+	newValue = Math.round(newValue * big10) / big10
+
+
 	return newValue
 }
 
