@@ -9,7 +9,6 @@ var _data = {
     ver: '0.1.3',
     condOper: ['!=', '>=', '<=', '>', '<', '='], // add single char conditions at end of array
     preOps: [ '+', '-', '*', '/', '%', '.', '$', '!' ], // may be used before colon to form special operator
-    valuables: ['input'],
     selectors: [],
     opts: {},
     e: {},
@@ -797,7 +796,7 @@ var _get = function(attribute, differentSelector, opts) {
     if (el) {
         // attr or textcontent?
         tag = el.tagName.toLowerCase()
-        if (attribute == 'value' && _data.valuables.indexOf(tag) === -1) { // use textcontent
+        if (attribute == 'value' && tag == 'input') { // use textcontent
             result = el.textContent
         }
         else { // attr, when a=value and tag=input
@@ -953,7 +952,7 @@ var _set = function(selatts, newValue, newOperator, opts) {
  */
 var _setAttribute = function(el, attribute, newValue) {
     tag = el.tagName.toLowerCase()
-    if (attribute == 'value' && _data.valuables.indexOf(tag) === -1) { 
+    if (attribute == 'value' && tag == 'input') { 
         el.textContent = newValue
     }
     else { // attr, when a=value and tag=input
