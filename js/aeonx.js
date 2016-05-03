@@ -243,7 +243,10 @@ var _categorizer = function(tokens) {
             if (each.pos == 'rgt') {
                 first = each.tok.charAt(0) 
                 if ( first == '$' || ( first != '"' && first != "'" ) ) {
-                    each.unstr = true
+                    // make sure it isn't a number
+                    if (isNaN(first)) {
+                        each.unstr = true
+                    }
                 }
             }
 
@@ -292,7 +295,13 @@ var _stringizer = function(cats) {
 
                 if (cat.unstr)
                     jsonString = jsonString + '"`' + cat.tok + '`"'
-                else
+                else if (cat.tok.charAt(0) == "'" || cat.tok.charAt(0) == '"') {
+                    // remove both start/end character, force doublequote
+                    newToken = '"' + (cat.tok.slice( 1 ).slice(0, -1)) + '"'
+
+                    jsonString = jsonString + newToken
+                }
+                else 
                     jsonString = jsonString + '"' + cat.tok + '"' 
             }
 
@@ -333,8 +342,12 @@ var _isOperator = function(token) {
 var $parse = function(raw) {
 
   pretokens = _tokenize(raw)
+  if ($debug) console.log('pretokens', pretokens);
   tokens = _grouper(pretokens)
+  if ($debug) console.log('tokens', tokens);
   cats = _categorizer(tokens)
+  if ($debug) console.log('cats', cats);
+
   jsonString = _stringizer(cats)
 
   var newObj = JSON.parse(jsonString)

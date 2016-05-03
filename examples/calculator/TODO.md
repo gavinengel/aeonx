@@ -17,5 +17,17 @@
       }
     },
 
+
+
+    .num {
+      @onclick {
+        @if(.screen & value != 0) {
+          .screen & value: 2
+        }
+        @if(.screen & value = 0) {
+          .screen & value: 3
+        }
+      }
+    }
 */
 
