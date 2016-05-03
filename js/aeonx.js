@@ -1,4 +1,3 @@
-// TODO: remove .ext property
 
 /**
  * data tree
@@ -7,10 +6,9 @@
 var $debug = false
 
 var _data = {
-    ver: '0.1.2',
+    ver: '0.1.3',
     condOper: ['!=', '>=', '<=', '>', '<', '='], // add single char conditions at end of array
     preOps: [ '+', '-', '*', '/', '%', '.', '$', '!' ], // may be used before colon to form special operator
-    ext: {},
     valuables: ['input'],
     selectors: [],
     opts: {},
@@ -615,7 +613,7 @@ var _evalIf = function (expression) {
         // extension-exec
         _data.cond.ext = withoutSel.substr(1)    
         // execute it
-        var ext = _data.ext[ _data.cond.ext ]
+        var ext = window[ _data.cond.ext ]
         var e = {}
         if (_data.opts && _data.opts.hasOwnProperty('e')) {
             e = _data.opts.e
@@ -708,11 +706,7 @@ var _unstringExec = function(value, opts) {
 
             parent = {}
             parentName = ''
-            if (typeof _data.ext[ pieces[0] ] != 'undefined') {
-                parent = _data.ext
-                parentName = '_data.ext'
-            }
-            else if (typeof window[ pieces[0] ] != 'undefined') {
+            if (typeof window[ pieces[0] ] != 'undefined') {
                 parent = window
                 parentName = 'window'
             }
@@ -853,10 +847,6 @@ var _operate = function (selector, attribute, newOperator, newValue) {
         case '.':
             newValue = existingValue.concat(newValue)
             break
-        case '$':
-            // this is calling an extension.
-            newValue = 'return _data.ext.' + newValue + '(event);'
-            break
         case '!': // toggle on/off
             // split value by spaces
             var existingValues = existingValue.split(' ')
@@ -891,8 +881,7 @@ var _set = function(selatts, newValue, newOperator, opts) {
         // split on dot
         pieces = rawTarget.split('.')
 
-        // first, search in aeonx.ext
-        extLink = _data.ext
+        extLink = window
         for (var i = 0; i < pieces.length-1; i++) {
 
             if (typeof extLink[ pieces[i] ] != 'undefined') {
@@ -901,21 +890,6 @@ var _set = function(selatts, newValue, newOperator, opts) {
             else {
                 extLink = null
                 break
-            }
-        }
-
-        // else use global
-        if (!extLink) {
-            extLink = window
-            for (var i = 0; i < pieces.length-1; i++) {
-
-                if (typeof extLink[ pieces[i] ] != 'undefined') {
-                    extLink = extLink[ pieces[i] ]
-                }
-                else {
-                    extLink = null
-                    break
-                }
             }
         }
         // final param of pieces is the element to update/call
