@@ -571,7 +571,7 @@ var _addListeners = function (eventType, eventCond, selector, value) {
         // stash the event data for later use (by saving key to new element attribute)
         var a = document.createAttribute( 'data-' + eventType + '-eid'  )
         var eId = ++_data.eId
-        _data.eData[ eId ] = { aeon: newExec, condition: eventCond }
+        _data.eData[ eId ] = { aeon: newExec, condition: _data.cond }
         a.value = eId
         els[i].setAttributeNode( a )
 
@@ -582,7 +582,7 @@ var _addListeners = function (eventType, eventCond, selector, value) {
             eId = e.currentTarget.getAttribute( eAttr )
             eData = _data.eData[ eId ]
 
-            var condResult = true
+            var condResult = false
             if (eData.condition.lft) { 
                 if (eData.condition.oper && eData.condition.rgt) {
                     if ($debug) console.log('3 part condition found', {e:e, eData: eData})
@@ -675,7 +675,7 @@ var _parseCondition = function (condition) {
             if ($debug) console.log('found a conditional operator:', _data.condOper[i])
             trio.oper = _data.cond.oper = _data.condOper[i]
             pieces = condition.split( _data.cond.oper )
-            trio.lft = _data.cond.attr = pieces[0].trim()
+            trio.lft = _data.cond.lft = _data.cond.attr = pieces[0].trim()
             trio.rgt = _data.cond.rgt = pieces[1].trim()
             break
         }

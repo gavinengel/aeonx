@@ -31,3 +31,43 @@
     }
 */
 
+BUG, double click & click screen with:
+
+#calculator {
+  .eval {
+    @onclick {
+      .screen & value: $filters.equal;
+    }
+  }
+  .num {
+    @on(click) {
+      .screen & value.: value;
+    }
+  }
+  .dec {
+    @onclick {
+      .screen & value.: $filters.dot;
+    }
+  }
+  .operator {
+    @onclick {
+      .screen & value.: $filters.operator; 
+    }
+  }
+  .clear {
+    @onclick {
+      .screen & value: '';
+    }
+  }
+  .top {
+    @onclick(button = 3)  {
+      @if(.screen & value = 12) {
+        .screen & value: 1337;
+      }
+    }
+    @ondblclick {
+      .screen & value: 12;
+    }
+  }
+
+}
