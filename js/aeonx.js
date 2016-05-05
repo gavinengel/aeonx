@@ -3,7 +3,7 @@
  * data tree
  */
 
-var $debug = false
+var $debug = true
 
 var _data = {
     ver: '0.1.3',
@@ -571,7 +571,7 @@ var _addListeners = function (eventType, eventCond, selector, value) {
         // stash the event data for later use (by saving key to new element attribute)
         var a = document.createAttribute( 'data-' + eventType + '-eid'  )
         var eId = ++_data.eId
-        _data.eData[ eId ] = { aeon: newExec, condition: _data.cond }
+        _data.eData[ eId ] = { aeon: newExec, condition: eventCond }
         a.value = eId
         els[i].setAttributeNode( a )
 
@@ -596,7 +596,9 @@ var _addListeners = function (eventType, eventCond, selector, value) {
                 }
             }
             else {
-                if ($debug) console.log('no event condition', eventCond)
+                if ($debug) console.log('no event condition1', eventCond)
+                if ($debug) console.log('no event condition2', eData)
+                condResult = true
 
             }
             
@@ -675,7 +677,7 @@ var _parseCondition = function (condition) {
             if ($debug) console.log('found a conditional operator:', _data.condOper[i])
             trio.oper = _data.cond.oper = _data.condOper[i]
             pieces = condition.split( _data.cond.oper )
-            trio.lft = _data.cond.lft = _data.cond.attr = pieces[0].trim()
+            trio.lft = _data.cond.attr = pieces[0].trim()
             trio.rgt = _data.cond.rgt = pieces[1].trim()
             break
         }
@@ -817,7 +819,7 @@ var _get = function(attribute, differentSelector, opts) {
         }
 
         if (result === undefined || result === null) {
-			result = ''
+            result = ''
         }
     }
     
