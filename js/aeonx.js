@@ -3,10 +3,10 @@
  * data tree
  */
 
-var $debug = true
+var $debug = false
 
 var _data = {
-    ver: '0.1.3',
+    ver: '0.2.0',
     condOper: ['!=', '>=', '<=', '>', '<', '='], // add single char conditions at end of array
     preOps: [ '+', '-', '*', '/', '%', '.', '$', '!' ], // may be used before colon to form special operator
     selectors: [],
