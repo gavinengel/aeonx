@@ -111,31 +111,7 @@ var _tokenize = function (raw) {
   }
   tokens = temp
   if ($debug) console.log({tokens2: tokens})
-/*
-// TODO: integrate following block into previous RegExp.match
-  // connect together the selatts
-  var temp = []
-  var len = tokens.length
-  var addToPrev = false
-  for (var i = 0; i < len; i++ ) {
-    
-    if (addToPrev) {
-        prev = temp.pop()
-        temp.push( prev + tokens[i] )
-        addToPrev = false
-    }
-    else if (tokens[i] == '&') {
-        // add this to previous token, also add flag to add next to previous token as well
-        prev = temp.pop()
-        temp.push( prev + ' & ' )
-        addToPrev = true 
-    }
-    else {
-        temp.push(tokens[i])
-    }
-  }
-  tokens = temp
-*/
+
 
 // TODO: integrate following block into previous RegExp.match
   // detach ; from ends of `rights`
@@ -222,9 +198,14 @@ var _categorizer = function(tokens) {
                 each.pos = 'par';
             } 
 
+            // end
+            if (token == ';') {
+                each.pos = 'end';
+            } 
+
             // left: if prev == {
             if (!each.pos) {
-                if (prev == '{') {
+                if (prev == '{' || prev == ';') {
                     each.pos = 'lft';
                 }
             }
@@ -276,6 +257,9 @@ var _stringizer = function(cats) {
             }
         } else if (cat.pos == 'key') {
             jsonString = jsonString + '"' + cat.tok + '":'
+        } else if (cat.pos == 'end') {
+            // found semi colon.  we add no char, or add comma if the next token is not `}`
+            if (cat.next != '}') jsonString = jsonString + ','
         } else if (cat.pos == 'lft') {
             if (cat.unstr)
                 jsonString = jsonString + '"`' + cat.tok + '`"'
@@ -349,6 +333,7 @@ var $parse = function(raw) {
   if ($debug) console.log('cats', cats);
 
   jsonString = _stringizer(cats)
+  if ($debug) console.log('jsonString', jsonString);
 
   var newObj = JSON.parse(jsonString)
 
@@ -831,6 +816,12 @@ var _get = function(attribute, differentSelector, opts) {
 }
 
 
+var _toNum = function (someString) {
+    var someNum = parseFloat(someString)
+    if (isNaN(someNum)) someNum = 0
+    return someNum
+}
+
 /**
  *
  */
@@ -838,29 +829,19 @@ var _operate = function (selector, attribute, newOperator, newValue) {
     var existingValue = _get(attribute, selector)
     switch(newOperator) {
         case '+':
-            newValue = parseFloat(newValue) | 0
-            existingValue = parseFloat(existingValue) | 0 
-            newValue = existingValue + newValue 
+            newValue = _toNum(existingValue) + _toNum(newValue) 
             break
         case '-':
-            newValue = parseFloat(newValue) | 0
-            existingValue = parseFloat(existingValue) | 0
-            newValue = existingValue - newValue 
+            newValue = _toNum(existingValue) - _toNum(newValue)  
             break
         case '*':
-            newValue = parseFloat(newValue) | 0
-            existingValue = parseFloat(existingValue) | 0
-            newValue = existingValue * newValue 
+            newValue = _toNum(existingValue) * _toNum(newValue)  
             break
         case '/':
-            newValue = parseFloat(newValue) | 0
-            existingValue = parseFloat(existingValue) | 0
-            newValue = existingValue / newValue 
+            newValue = _toNum(existingValue) / _toNum(newValue) 
             break
         case '%':
-            newValue = parseFloat(newValue) | 0
-            existingValue = parseFloat(existingValue) | 0
-            newValue = existingValue % newValue 
+            newValue = _toNum(existingValue) % _toNum(newValue) 
             break
         case '.':
             newValue = existingValue.concat(newValue)
