@@ -482,12 +482,10 @@ var _execRule = function(property, value) {
     var rule = pieces[0].substr(1).trim().toLowerCase()
 
     // get `eventConds`
-    wholeConds = ''
-    eventConds = [] // [{ lft: '', op: '', rgt: '' }]
+    var eventConds = [] // [{ lft: '', op: '', rgt: '' }]
     if (pieces[1]) {
         pieces = pieces[1].split(')')
-        wholeConds = pieces[0].trim()
-        condsPieces = wholeConds.split(';')
+        condsPieces = pieces[0].trim().split(';') 
         
         for (var i = 0; i < condsPieces.length; i++) {
             wholeCond = condsPieces[ i ].trim()
@@ -501,8 +499,10 @@ var _execRule = function(property, value) {
 
     }
 
+
     if (rule.substr(0, 2) == 'on') {
-        _execOnRule(selector, value, rule, wholeConds, eventConds)
+        var eventType = (rule.length > 2)? rule.slice(2) : pieces[0].trim()
+        _execOnRule(selector, value, eventType, eventConds)
     }
     else if (rule == 'if') {
         _execIfRule(property, value)
@@ -518,16 +518,20 @@ var _execRule = function(property, value) {
 /**
  *
  */
-var _execOnRule = function (selector, value, rule, wholeConds, eventConds){
+var _execOnRule = function (selector, value, eventType, eventConds){
     
-    if (rule != 'on') {
-        // is @onEvent rule.
-        eventConds.push({ eventType: rule.slice(2) })
+    // there are conditions, loop and add listeners
+    if (eventConds.length) {
+
+        for( i=0; i < eventConds.length; i++ ) {
+            ///eventType = eventConds[i].eventType || eventConds[i].rgt
+            _addListeners(eventType, eventConds[i], selector, value)
+        }
     }
 
-    for( i=0; i < eventConds.length; i++ ) {
-        eventType = eventConds[i].eventType || eventConds[i].rgt
-        _addListeners(eventType, eventConds[i], selector, value)
+    // otherwise add a single listener
+    else {
+        _addListeners(eventType, {}, selector, value)
     }
 }
 
