@@ -111,16 +111,19 @@ var _tokenize = function (raw) {
         temp.push( ';')
     }
     // if the token has `(` or `)`
-    else if ( tok.indexOf('(') >= 0) {
+    else if ( tok.indexOf('(') != -1 || tok.indexOf(')') != -1) {
+        // first the `(`
         mid = tok.indexOf('(')
         temp.push( tok.slice(0, mid) )
-        temp.push( '(')
-        temp.push( tok.slice(mid + 1) )
-    }
-    else if ( tok.indexOf(')') >= 0 ) {
-        mid = tok.indexOf(')')
-        temp.push( tok.slice(0, mid) )
-        temp.push( ')')
+        temp.push('(')
+
+        // next the `)`
+        rgtHalf = tok.slice(mid + 1)
+        if (rgtHalf.indexOf(')') != -1) {
+            mid = rgtHalf.indexOf(')')
+            temp.push( rgtHalf.slice(0, mid) )
+            temp.push(')')
+        }
     }
     else {
         temp.push(tok)
