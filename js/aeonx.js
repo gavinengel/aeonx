@@ -109,13 +109,18 @@ var _tokenize = function (raw) {
         mid = tok.indexOf(';')
         temp.push( tok.slice(0, mid) )
         temp.push( ';')
+
+        rgtHalf = tok.slice(mid + 1).trim()
+        if (rgtHalf) temp.push(rgtHalf)
     }
     // if the token has `(` or `)`
     else if ( tok.indexOf('(') != -1 || tok.indexOf(')') != -1) {
         // first the `(`
         mid = tok.indexOf('(')
-        temp.push( tok.slice(0, mid) )
-        temp.push('(')
+        if (mid != -1) {
+            temp.push( tok.slice(0, mid) )
+            temp.push('(')
+        }
 
         // next the `)`
         rgtHalf = tok.slice(mid + 1)
@@ -123,6 +128,9 @@ var _tokenize = function (raw) {
             mid = rgtHalf.indexOf(')')
             temp.push( rgtHalf.slice(0, mid) )
             temp.push(')')
+        }
+        else {
+            temp.push( rgtHalf )
         }
     }
     else {
