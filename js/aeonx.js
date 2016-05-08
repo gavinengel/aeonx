@@ -3,10 +3,10 @@
  * data tree
  */
 
-var $debug = true
+var $debug = false
 
 var _data = {
-    ver: '0.2.0',
+    ver: '0.3.0',
     condOper: ['!=', '>=', '<=', '>', '<', '='], // add single char conditions at end of array
     preOps: [ '+', '-', '*', '/', '%', '.', '$', '!' ], // may be used before colon to form special operator
     selectors: [],
@@ -75,8 +75,7 @@ var _tokenize = function (raw) {
 
 
   /** tokenizer **/
-    ///raw = raw.replace(/;/g, "\n")
-
+  raw = raw.replace(/;/g, "; ") 
   var tokens = raw.match(/\S+/g)
   if ($debug) console.log({tokens1: tokens})
 
@@ -139,26 +138,6 @@ var _tokenize = function (raw) {
   }
   tokens = temp
   if ($debug) console.log({tokens2: tokens})
-
-
-// TODO: integrate following block into previous RegExp.match
-  // detach ; from ends of `rights`
-  /*
-  var temp = []
-  var len = tokens.length
-  for (var i = 0; i < len; i++ ) {
-    
-    if (tokens[i].slice(-1) == ';') {
-        temp.push( tokens[i].slice(0, -1) )  
-        temp.push( ';' ) 
-    }
-    else {
-        temp.push(tokens[i])
-    }
-  }
-  tokens = temp
-*/
-  if ($debug) console.log({tokens3: tokens})
 
   return tokens;
 }
@@ -618,7 +597,7 @@ var _addListeners = function (eventType, eventConds, selector, value) {
             eId = e.currentTarget.getAttribute( eAttr )
             eData = _data.eData[ eId ]
 
-            var condResult = false
+            var foundFail = false
 
             for (var j=0; j < eData.conditions.length; j++ ) {
                 var cnd = eData.conditions[j]
@@ -626,17 +605,17 @@ var _addListeners = function (eventType, eventConds, selector, value) {
                     if (cnd.oper && cnd.rgt) {
                         if ($debug) console.log('3 part condition found', {e:e, eData: eData})
 
-                        condResult = _compare(e[cnd.lft], cnd.oper, cnd.rgt)
+                        if (!_compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
                     }    
                     else {
                         if ($debug) console.log('1 part condition found', {e:e, eData: eData})
 
-                        if (!e[cnd.lft]) condResult = false
+                        if (!e[cnd.lft]) foundFail = true
                     }
                 }
             }
             
-            if (condResult || !eData.conditions.length) { 
+            if (!foundFail || !eData.conditions.length) { 
                 if ($debug) console.log('condition passed', {e:e, eData: eData})
                 $run(eData.aeon, null, {el: e.currentTarget, e: e})
 

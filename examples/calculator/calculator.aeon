@@ -1,9 +1,34 @@
-
+#calculator {
+  .eval {
+    @onclick {
+      .screen & value: $filters.equal;
+    }
+  }
+  .num {
+    @on(click) {
+      .screen & value.: value;
+    }
+  }
+  .dec {
+    @onclick {
+      .screen & value.: $filters.dot;
+    }
+  }
+  .operator {
+    @onclick {
+      .screen & value.: $filters.operator ;
+    }
+  }
+  .clear {
+    @onclick {
+      .screen & value: '';
+    }
+  }
   .top {
-    @onmousedown(button = 1;ctrlKey = true)  {
+    @onmouseup(button = 1;ctrlKey=true)  {
       .screen & value: 111;
     }
   }
-
+}
 
 
