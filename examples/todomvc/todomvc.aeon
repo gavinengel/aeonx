@@ -1,5 +1,5 @@
 .todoapp {
-  @onclick {
-    data-foo: 1;
+  #entry {
+    onsubmit: $Handler.addTodo;
   }
 }

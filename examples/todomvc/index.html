@@ -10,7 +10,9 @@
 		<section class="todoapp">
 			<header class="header">
 				<h1>todos</h1>
-				<input class="new-todo" placeholder="What needs to be done?" autofocus>
+				<form id="entry">
+					<input class="new-todo" placeholder="What needs to be done?" autofocus>
+				</form>
 			</header>
 			<section class="main">
 				<input class="toggle-all" type="checkbox">
@@ -38,14 +40,8 @@
 			<p>Created by <a href="http://twitter.com/gavinengel">Gavin Engel</a></p>
 			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 		</footer>
-		<script src="node_modules/todomvc-common/base.js"></script>
-		<script src="js/helpers.js"></script>
-		<script src="js/store.js"></script>
-		<script src="js/model.js"></script>
-		<script src="js/template.js"></script>
-		<script src="js/view.js"></script>
-		<script src="js/controller.js"></script>
-		<script src="js/app.js"></script>
+		<script src="node_modules/todomvc-common/base.jszzz"></script>
+
 	</body>
 <foot>
 		<script src="js/aeonApp/Filter.js"></script>
@@ -55,8 +51,9 @@
 	<!-- <script src="filters.js" type="text/javascript"></script> <!-- http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/filters.js -->
 	<script type="text/javascript">
 		//aeonx.debug = true 
-		aeonx.fetch('todomvc.aeon.json', aeonx.runJson); // http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/todomvc.aeon.json
-		//aeonx.fetch('todomvc.aeon', aeonx.runAeon); // http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/todomvc.aeon
+		//aeonx.fetch('todomvc.aeon.json', aeonx.runJson); // http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/todomvc.aeon.json
+		aeonx.fetch('todomvc.aeon', aeonx.runAeon); // http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/todomvc.aeon
+		console.log(Handler)
 	</script>
 </foot>
 </html>

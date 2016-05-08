@@ -6,7 +6,7 @@
 var $debug = false
 
 var _data = {
-    ver: '0.3.0',
+    ver: '0.3.1',
     condOper: ['!=', '>=', '<=', '>', '<', '='], // add single char conditions at end of array
     preOps: [ '+', '-', '*', '/', '%', '.', '$', '!' ], // may be used before colon to form special operator
     selectors: [],
@@ -743,7 +743,7 @@ var _unstringExec = function(value, opts) {
 
             // if: extension-link
             if (_data.tar.attr.slice(0, 2) == 'on') {
-                value = 'return ' + parentName + '.' + value + '(event);'
+                value = 'return ' + parentName + '.' + value + '(event) || false;' 
             }
             // else: extension-exec or extension-value
             else {

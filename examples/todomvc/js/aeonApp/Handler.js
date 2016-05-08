@@ -1,5 +1,49 @@
 
+/**
+ *
+ */
+var $addTodo = function(e) {
+  var msg = e.target[0].value
+  var newTag = document.createElement('li'); 
+  html = '<div class="view"><input class="toggle" type="checkbox"><label>'+msg+'</label>' +
+    '<button class="destroy" onclick="return window.Handler.delTodo(event) || false;"></button> </div> <input class="edit" value="asdf">'
 
+  newTag.innerHTML = html;
+  document.getElementsByClassName('todo-list')[0].appendChild(newTag);
+  var el = document.querySelector( '.new-todo' )
+  el.value = '';
+}
+
+/**
+ *
+ */
+var $delTodo = function(event) {
+  var todo = event.currentTarget.closest("li");  
+  todo.parentNode.removeChild(todo);
+}
+
+/*
+
+before:
+
+        <ul class="todo-list"></ul>
+
+/*
+
+after:
+
+    <ul class="todo-list"><li>
+      <div class="view">
+        <input class="toggle" type="checkbox">
+        <label>asdf</label>
+        <button class="destroy"></button>
+      </div>
+      <input class="edit" value="asdf">
+    </li>
+    </ul>
+
+
+/*
 var $destroy = function(e) {
   // get the li-id
   var id = $getNearestLiId(e.target)
@@ -30,7 +74,7 @@ var $getNearestLiId = function(node) {
  * @param  {String} tagname HTML tagName
  * @return {Object}         Parent node
  */
-function $getParentByTagName(node, tagname) {
+/*function $getParentByTagName(node, tagname) {
   var parent;
   if (node === null || tagname === '') return;
   parent  = node.parentNode;
@@ -45,8 +89,11 @@ function $getParentByTagName(node, tagname) {
 
   return parent;
 }
+*/
 
 Handler = {
-    destroy: $destroy,
-    clearCompleted: $clearCompleted
+    //destroy: $destroy,
+    //clearCompleted: $clearCompleted
+    addTodo: $addTodo,
+    delTodo: $delTodo
 }
