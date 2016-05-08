@@ -5,7 +5,7 @@
 var $addTodo = function(e) {
   var msg = e.target[0].value
   var newTag = document.createElement('li'); 
-  html = '<div class="view"><input class="toggle" type="checkbox"><label>'+msg+'</label>' +
+  html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
     '<button class="destroy" onclick="return window.Handler.delTodo(event) || false;"></button> </div> <input class="edit" value="asdf">'
 
   newTag.innerHTML = html;
@@ -21,6 +21,19 @@ var $delTodo = function(event) {
   var todo = event.currentTarget.closest("li");  
   todo.parentNode.removeChild(todo);
 }
+
+
+/**
+ *
+ */
+var $toggleTodo = function(event) {
+  var todo = event.currentTarget.closest("li");  
+  currentStatus = todo.getAttribute('class')
+  newStatus = (currentStatus == 'completed')? '' : 'completed'
+  todo.setAttribute('class', newStatus)
+  return true
+}
+
 
 /*
 
@@ -95,5 +108,6 @@ Handler = {
     //destroy: $destroy,
     //clearCompleted: $clearCompleted
     addTodo: $addTodo,
-    delTodo: $delTodo
+    delTodo: $delTodo,
+    toggleTodo: $toggleTodo
 }
