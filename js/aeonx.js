@@ -3,7 +3,7 @@
  * data tree
  */
 
-var $debug = false
+var $debug = true
 
 var _data = {
     ver: '0.2.0',
@@ -85,11 +85,10 @@ var _tokenize = function (raw) {
   var temp = []
   var len = tokens.length
   for (var i = 0; i < len; i++ ) {
-    
-    if (tokens[i].slice(-1) == ':') {
-        //bad//temp.push( tokens[i].match(/\w+/).shift() ) // first, add text
-        //bad//temp.push( tokens[i].match(/\W+/).shift() ) // last, add biop
-        withoutColon = tokens[i].slice(0, -1); // remove the ":" from end
+    var tok = tokens[i] 
+    // if token has a `:`
+    if (tok.slice(-1) == ':') {
+        withoutColon = tok.slice(0, -1); // remove the ":" from end
         preOp = '';
         withoutOp = withoutColon;
 
@@ -105,8 +104,26 @@ var _tokenize = function (raw) {
         temp.push(op);
 
     }
+    // if the token has `;`
+    else if ( tok.indexOf(';') >= 0) {
+        mid = tok.indexOf(';')
+        temp.push( tok.slice(0, mid) )
+        temp.push( ';')
+    }
+    // if the token has `(` or `)`
+    else if ( tok.indexOf('(') >= 0) {
+        mid = tok.indexOf('(')
+        temp.push( tok.slice(0, mid) )
+        temp.push( '(')
+        temp.push( tok.slice(mid + 1) )
+    }
+    else if ( tok.indexOf(')') >= 0 ) {
+        mid = tok.indexOf(')')
+        temp.push( tok.slice(0, mid) )
+        temp.push( ')')
+    }
     else {
-        temp.push(tokens[i])
+        temp.push(tok)
     }
   }
   tokens = temp
@@ -115,6 +132,7 @@ var _tokenize = function (raw) {
 
 // TODO: integrate following block into previous RegExp.match
   // detach ; from ends of `rights`
+  /*
   var temp = []
   var len = tokens.length
   for (var i = 0; i < len; i++ ) {
@@ -128,7 +146,7 @@ var _tokenize = function (raw) {
     }
   }
   tokens = temp
-
+*/
   if ($debug) console.log({tokens3: tokens})
 
   return tokens;
@@ -144,17 +162,18 @@ var _grouper = function (tokens) {
     len = tokens.length
     
     for ( var i = 0; i < len; i++ ) {
+        tok = tokens[i]
         if (
-            (tokens[i].length == 2 && tokens[i].charAt(1) == ':') || 
-            (['{', '}', ':', ';'].indexOf( tokens[i] ) != -1)
+            (tok.length == 2 && tok.charAt(1) == ':') || 
+            (['{', '}', ':', ';', '(', ')'].indexOf( tok ) != -1)
         ) {
             if (combined) groups.push( combined.trim() )
             combined = ''
-            groups.push( tokens[i] )
+            groups.push( tok )
         }
         else {
 
-            combined = combined + " " + tokens[i]
+            combined = combined + " " + tok
         }
     }
 
@@ -193,9 +212,19 @@ var _categorizer = function(tokens) {
                 each.pos = 'key';
             }
 
-            // par
+            // brk
             if (token == '}' || token == '{') {
+                each.pos = 'brk';
+            } 
+
+            // par
+            if (token == ')' || token == '(') {
                 each.pos = 'par';
+            } 
+
+            // cnd
+            if (token.indexOf( '=' ) != -1) {
+                each.pos = 'cnd';
             } 
 
             // end
@@ -248,7 +277,7 @@ var _stringizer = function(cats) {
       for (var i = 0; i < cats.length; i++ ) {
         cat = cats[i]
 
-        if (cat.pos == 'par') {
+        if (cat.pos == 'brk') {
             jsonString = jsonString + cat.tok
 
             // add comma?
@@ -259,12 +288,15 @@ var _stringizer = function(cats) {
             jsonString = jsonString + '"' + cat.tok + '":'
         } else if (cat.pos == 'end') {
             // found semi colon.  we add no char, or add comma if the next token is not `}`
-            if (cat.next != '}') jsonString = jsonString + ','
+            if (cat.next.indexOf('=') != -1) jsonString = jsonString + ';'
+            else if (cat.next != '}' && cat.next != ')') jsonString = jsonString + ','
         } else if (cat.pos == 'lft') {
+            end = (cat.next == '(')? '' : '"' // { or (
+
             if (cat.unstr)
                 jsonString = jsonString + '"`' + cat.tok + '`"'
             else
-                jsonString = jsonString + '"' + cat.tok + '"'
+                jsonString = jsonString + '"' + cat.tok + end
         } else if (cat.pos == 'mid') {
             if (cat.tok == ':') {
                 jsonString = jsonString + ':'
@@ -293,6 +325,10 @@ var _stringizer = function(cats) {
                 jsonString = jsonString + ']'
                 openArray = false
             }
+        } else if (cat.tok == ')' && cat.next == '{') {
+            jsonString = jsonString + cat.tok + '":'
+        } else {
+            jsonString = jsonString + cat.tok
         }
       }
       jsonString = "\t{" + jsonString + "}\t"
@@ -508,15 +544,15 @@ var _execOnRule = function (selector, value, eventType, eventConds){
     // there are conditions, loop and add listeners
     if (eventConds.length) {
 
-        for( i=0; i < eventConds.length; i++ ) {
+        ///for( i=0; i < eventConds.length; i++ ) {
             ///eventType = eventConds[i].eventType || eventConds[i].rgt
-            _addListeners(eventType, eventConds[i], selector, value)
-        }
+            _addListeners(eventType, eventConds, selector, value)
+        ///}
     }
 
     // otherwise add a single listener
     else {
-        _addListeners(eventType, {}, selector, value)
+        _addListeners(eventType, [], selector, value)
     }
 }
 
@@ -549,7 +585,7 @@ var _execElseRule = function (value) {
 /**
  *
  */
-var _addListeners = function (eventType, eventCond, selector, value) {
+var _addListeners = function (eventType, eventConds, selector, value) {
     // we must add a listener for the current selector + this onEvent.
     var els = document.querySelectorAll( selector )
 
@@ -560,7 +596,7 @@ var _addListeners = function (eventType, eventCond, selector, value) {
         // stash the event data for later use (by saving key to new element attribute)
         var a = document.createAttribute( 'data-' + eventType + '-eid'  )
         var eId = ++_data.eId
-        _data.eData[ eId ] = { aeon: newExec, condition: eventCond }
+        _data.eData[ eId ] = { aeon: newExec, conditions: eventConds }
         a.value = eId
         els[i].setAttributeNode( a )
 
@@ -572,26 +608,24 @@ var _addListeners = function (eventType, eventCond, selector, value) {
             eData = _data.eData[ eId ]
 
             var condResult = false
-            if (eData.condition.lft) { 
-                if (eData.condition.oper && eData.condition.rgt) {
-                    if ($debug) console.log('3 part condition found', {e:e, eData: eData})
 
-                    condResult = _compare(e[eData.condition.lft], eData.condition.oper, eData.condition.rgt)
-                }    
-                else {
-                    if ($debug) console.log('1 part condition found', {e:e, eData: eData})
+            for (var j=0; j < eData.conditions.length; j++ ) {
+                var cnd = eData.conditions[j]
+                if (cnd.lft) { 
+                    if (cnd.oper && cnd.rgt) {
+                        if ($debug) console.log('3 part condition found', {e:e, eData: eData})
 
-                    if (!e[eData.condition.lft]) condResult = false
+                        condResult = _compare(e[cnd.lft], cnd.oper, cnd.rgt)
+                    }    
+                    else {
+                        if ($debug) console.log('1 part condition found', {e:e, eData: eData})
+
+                        if (!e[cnd.lft]) condResult = false
+                    }
                 }
             }
-            else {
-                if ($debug) console.log('no event condition1', eventCond)
-                if ($debug) console.log('no event condition2', eData)
-                condResult = true
-
-            }
             
-            if (condResult) { 
+            if (condResult || !eData.conditions.length) { 
                 if ($debug) console.log('condition passed', {e:e, eData: eData})
                 $run(eData.aeon, null, {el: e.currentTarget, e: e})
 
