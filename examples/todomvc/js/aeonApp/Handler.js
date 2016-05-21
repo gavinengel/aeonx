@@ -14,6 +14,7 @@ var $addTodo = function(e) {
   el.value = '';
 }
 
+
 /**
  *
  */
