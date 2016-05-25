@@ -4,6 +4,8 @@
  */
 
 var $debug = false
+var $delegate = ''
+
 
 var _data = {
     ver: '0.3.1',
@@ -14,6 +16,7 @@ var _data = {
     e: {},
     eId: 0,
     eData: {},
+    listeners: [],
     sel: "",
     eventType: "",
     cond: {
@@ -577,8 +580,22 @@ var _execElseRule = function (value) {
  */
 var _addListeners = function (eventType, eventConds, selector, value) {
     // we must add a listener for the current selector + this onEvent.
-    var els = document.querySelectorAll( selector )
+    console.log("selector: "+selector)
+    ///var els = document.querySelectorAll( selector )
+    ///console.log(els)
+    var delegateSel = ($delegate)? $delegate : 'body' 
+    ///var delegate = document.querySelectorAll( delegateSel )[0]
 
+    // jquery way...
+    
+    $( delegateSel ).delegate( selector, eventType, function(e) {
+      $( this ).after( "<div>div paragraph!</div>" );
+      $( this ).css('background-color', 'red');
+      return _delegate(e, {}, $( this )[ 0 ]);
+    });
+
+
+/*
     for (var i=0; i < els.length; i++ ) {
         newExec = {}
         newExec[selector] = value
@@ -586,45 +603,98 @@ var _addListeners = function (eventType, eventConds, selector, value) {
         // stash the event data for later use (by saving key to new element attribute)
         var a = document.createAttribute( 'data-' + eventType + '-eid'  )
         var eId = ++_data.eId
-        _data.eData[ eId ] = { aeon: newExec, conditions: eventConds }
+        _data.eData[ eId ] = { aeon: newExec, conditions: eventConds, els: els }
         a.value = eId
         els[i].setAttributeNode( a )
 
+        if (_data.listeners.indexOf(eventType) == -1) {
+console.log('add listener for:'+eventType);
+            _data.listeners.push(eventType)
+            
+            // my way...
+            delegate.addEventListener(eventType, function(e){
+                console.log('...in listener...')
+                return _delegate(e, { els: els});
+            });
 
-        els[i].addEventListener(eventType, function(e){
-            if ($debug) console.log(e)
-            eAttr = 'data-' + e.type + '-eid'
-            eId = e.currentTarget.getAttribute( eAttr )
-            eData = _data.eData[ eId ]
+        }
+        else {
+                console.log('...in else...')
 
-            var foundFail = false
+        }
+    } */
+}
 
-            for (var j=0; j < eData.conditions.length; j++ ) {
-                var cnd = eData.conditions[j]
-                if (cnd.lft) { 
-                    if (cnd.oper && cnd.rgt) {
-                        if ($debug) console.log('3 part condition found', {e:e, eData: eData})
 
-                        if (!_compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
-                    }    
-                    else {
-                        if ($debug) console.log('1 part condition found', {e:e, eData: eData})
+/**
+ *
+ */
+var _delegate = function(e, opts, foundNode) {
 
-                        if (!e[cnd.lft]) foundFail = true
-                    }
+    els = opts.els
+
+
+    //was one of the els clicked?
+    var foundNode = foundNode || null
+    var eData = {}
+    if (!foundNode) {
+        for (var k=0; k < els.length; k++) {
+            //TODO after node found, prevent additional isSameNode
+            console.log(els[k])
+            //console.log(els)
+            if (els[k].isSameNode(e.target)) {
+                console.log('same target')
+                foundNode = els[k]
+
+                break;
+            }
+
+        }
+    }
+
+    if (foundNode) {
+
+                console.log('...found node...')
+                console.log('foundnode: ', foundNode)
+                eAttr = 'data-' + e.type + '-eid'
+                //eId = foundNode.getAttribute( eAttr )
+                //eData = _data.eData[ eId ]
+                console.log('_data: ', _data)
+                console.log('eData: ', eData)
+
+        var foundFail = false
+
+        for (var j=0; j < eData.conditions.length; j++ ) {
+            var cnd = eData.conditions[j]
+            if (cnd.lft) { 
+                if (cnd.oper && cnd.rgt) {
+                    if ($debug) console.log('3 part condition found', {e:e, eData: eData})
+
+                    if (!_compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
+                }    
+                else {
+                    if ($debug) console.log('1 part condition found', {e:e, eData: eData})
+
+                    if (!e[cnd.lft]) foundFail = true
                 }
             }
-            
-            if (!foundFail || !eData.conditions.length) { 
-                if ($debug) console.log('condition passed', {e:e, eData: eData})
-                $run(eData.aeon, null, {el: e.currentTarget, e: e})
+        }
 
-            }
-            else {
-                if ($debug) console.log('condition failed', {e:e, eData: eData})
-            }
-        })
+        if (!foundFail || !eData.conditions.length) { 
+
+            if ($debug) console.log('condition passed', {e:e, eData: eData})
+            $run(eData.aeon, null, {el: e.currentTarget, e: e})
+
+        }
+        else {
+            if ($debug) console.log('condition failed', {e:e, eData: eData})
+        }
     }
+    else {
+                console.log('...not found node...')
+
+    }
+
 }
 
 /**
@@ -990,6 +1060,7 @@ var _setAttribute = function(el, attribute, newValue) {
         }
     }
 }
+
 
 /**
  * 

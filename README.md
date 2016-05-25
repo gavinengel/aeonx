@@ -9,6 +9,6 @@ Uses event delegation, when possible, on the .aeon definition root node.  This i
 
 Aeonx uses `DOMFocusIn` and `DOMFocusOut` in place of `focus` and `blur`.  This is because `focus` and `blur` do not bubble, and are not reliable for event delegation.
 
-The body-tag is default event delegator.  To use a different tag as the event delegator, pass the tag's id as a config option:
+The body-tag is default event delegate.  To use a different tag as the event delegate, pass the tag's id as a config option:
 
-  `aeonx.delegator = "someId";` 
+  `aeonx.delegate = "someId";` 
