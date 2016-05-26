@@ -3,7 +3,8 @@
  * data tree
  */
 
-var $debug = false
+var $debug = true
+var $delegate = ''
 
 var _data = {
     ver: '0.3.1',
@@ -578,6 +579,8 @@ var _execElseRule = function (value) {
 var _addListeners = function (eventType, eventConds, selector, value) {
     // we must add a listener for the current selector + this onEvent.
     var els = document.querySelectorAll( selector )
+    var delegateSel = ($delegate)? $delegate : 'body' 
+    var delegate = document.querySelectorAll( delegateSel )[0]      
 
     for (var i=0; i < els.length; i++ ) {
         newExec = {}
@@ -590,7 +593,59 @@ var _addListeners = function (eventType, eventConds, selector, value) {
         a.value = eId
         els[i].setAttributeNode( a )
 
+        ///
 
+        // $(document).on("click", <selector>, handler)
+        lastEvent = {}
+        delegate.addEventListener(eventType, function(e) {
+            for (var target=e.target; target && target!=this; target=target.parentNode) {
+            // loop parent nodes from the target to the delegation node
+                if (target.matches(selector)) {
+                    if (e != lastEvent) {
+                        lastEvent = e;
+                        ///handler.call(target, e);
+                        console.log('found!', selector)
+                        console.log(target)
+                        console.log({a:a, eId:eId, _data:_data})
+///
+                        eData = _data.eData[ eId ]
+
+                        var foundFail = false
+
+                        for (var j=0; j < eData.conditions.length; j++ ) {
+                            var cnd = eData.conditions[j]
+                            if (cnd.lft) { 
+                                if (cnd.oper && cnd.rgt) {
+                                    if ($debug) console.log('3 part condition found', {e:e, eData: eData})
+
+                                    if (!_compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
+                                }    
+                                else {
+                                    if ($debug) console.log('1 part condition found', {e:e, eData: eData})
+
+                                    if (!e[cnd.lft]) foundFail = true
+                                }
+                            }
+                        }
+                        
+                        if (!foundFail || !eData.conditions.length) { 
+                            if ($debug) console.log('condition passed', {e:e, eData: eData})
+                            $run(eData.aeon, null, {el: e.currentTarget, e: e})
+
+                        }
+                        else {
+                            if ($debug) console.log('condition failed', {e:e, eData: eData})
+                        }
+///
+
+                        break;
+                    }
+                }
+            }
+        }, false);
+
+        ///
+/*
         els[i].addEventListener(eventType, function(e){
             if ($debug) console.log(e)
             eAttr = 'data-' + e.type + '-eid'
@@ -623,7 +678,7 @@ var _addListeners = function (eventType, eventConds, selector, value) {
             else {
                 if ($debug) console.log('condition failed', {e:e, eData: eData})
             }
-        })
+        })*/
     }
 }
 
@@ -790,7 +845,8 @@ var _unstringExec = function(value, opts) {
         // c) empty or attribute from same selector:         data-foo
         else {
             if (value.length) {
-                value = _get(value, null, opts)    
+                opts.el = opts.e.target
+                value = _get(value, _data.selectors[0], opts)  // May 25th  
             }
             else {
                 value = ''
