@@ -581,21 +581,24 @@ var _execElseRule = function (value) {
 var _addListeners = function (eventType, eventConds, selector, value) {
     // we must add a listener for the current selector + this onEvent.
     console.log("selector: "+selector)
-    ///var els = document.querySelectorAll( selector )
+    var els = document.querySelectorAll( selector )
     ///console.log(els)
     var delegateSel = ($delegate)? $delegate : 'body' 
-    ///var delegate = document.querySelectorAll( delegateSel )[0]
+    var delegate = document.querySelectorAll( delegateSel )[0]
+
+
+
 
     // jquery way...
-    
+    /*
     $( delegateSel ).delegate( selector, eventType, function(e) {
       $( this ).after( "<div>div paragraph!</div>" );
       $( this ).css('background-color', 'red');
       return _delegate(e, {}, $( this )[ 0 ]);
     });
+*/
 
 
-/*
     for (var i=0; i < els.length; i++ ) {
         newExec = {}
         newExec[selector] = value
@@ -622,7 +625,7 @@ console.log('add listener for:'+eventType);
                 console.log('...in else...')
 
         }
-    } */
+    } 
 }
 
 
