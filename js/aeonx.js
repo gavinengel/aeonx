@@ -7,7 +7,7 @@ var $debug = true
 var $delegate = ''
 
 var _data = {
-    ver: '0.3.1',
+    ver: '0.3.2',
     condOper: ['!=', '>=', '<=', '>', '<', '='], // add single char conditions at end of array
     preOps: [ '+', '-', '*', '/', '%', '.', '$', '!' ], // may be used before colon to form special operator
     selectors: [],
@@ -225,7 +225,7 @@ var _categorizer = function(tokens) {
 
             // left: if prev == {
             if (!each.pos) {
-                if (prev == '{' || prev == ';') {
+                if (prev == '{' || prev == '}' || prev == ';') {
                     each.pos = 'lft';
                 }
             }

@@ -10,8 +10,8 @@ var $addTodo = function(e) {
 
   newTag.innerHTML = html;
   document.getElementsByClassName('todo-list')[0].appendChild(newTag);
-  var el = document.querySelector( '.new-todo' )
-  el.value = '';
+  var elm = document.querySelector( '.new-todo' )
+  elm.value = '';
 }
 
 
@@ -36,6 +36,13 @@ var $toggleTodo = function(event) {
 }
 
 
+var $clearCompleted = function(e) {
+  var elms = document.querySelectorAll( 'li.completed' ) // TODO use element.queryselectorall instead of document.qsa https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
+  for( i=0; i < elms.length; i++ ) {
+    elm = elms[i];
+    elm.parentNode.removeChild(elm); // TODO caniuse: remove();
+  }
+}
 /*
 
 before:
@@ -72,9 +79,6 @@ var $destroy = function(e) {
 }
 
 
-var $clearCompleted = function(e) {
-  todo.controller.removeCompletedItems()
-}
 
 var $getNearestLiId = function(node) {
   var parent = $getParentByTagName(node, 'li')
@@ -107,7 +111,7 @@ var $getNearestLiId = function(node) {
 
 Handler = {
     //destroy: $destroy,
-    //clearCompleted: $clearCompleted
+    clearCompleted: $clearCompleted,
     addTodo: $addTodo,
     delTodo: $delTodo,
     toggleTodo: $toggleTodo

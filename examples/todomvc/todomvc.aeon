@@ -2,4 +2,7 @@
   #entry {
     onsubmit: $Handler.addTodo;
   }
+  .clear-completed {
+    onclick: $Handler.clearCompleted;
+  }
 }
