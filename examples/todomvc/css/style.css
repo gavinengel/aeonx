@@ -1,0 +1,12 @@
+/**/
+html[hash="active"] .todoapp .todo-list li.completed {
+  display: none;
+}
+
+/**/
+html[hash="completed"] .todoapp .todo-list li {
+  display: none;
+}
+html[hash="completed"] .todoapp .todo-list li.completed {
+  display: block;
+}

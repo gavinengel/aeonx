@@ -1,10 +1,13 @@
 <!doctype html>
-<html lang="en" data-framework="javascript">
+<html lang="en" data-framework="javascript" >
 	<head>
 		<meta charset="utf-8">
 		<title>Aeonx.js • TodoMVC</title>
-		<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
-		<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+		<face>
+			<link rel="stylesheet" href="node_modules/todomvc-common/base.css">
+			<link rel="stylesheet" href="node_modules/todomvc-app-css/index.css">
+			<link rel="stylesheet" href="css/style.css">
+		</face>
 	</head>
 	<body>
 		<section class="todoapp">
@@ -50,6 +53,21 @@
 	<script src="../../js/aeonx.js" type="text/javascript"></script> <!-- http://rawgit.com/gavinengel/aeonx/master/js/aeonx.js -->
 	<!-- <script src="filters.js" type="text/javascript"></script> <!-- http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/filters.js -->
 	<script type="text/javascript">
+
+		// add the URL hash to the HTML-tag, so we can use CSS more effectively
+		function locationHashChanged() {
+				if(window.location.hash) {
+				  // Fragment exists
+				  var hashAttr = window.location.hash.replace(/[^a-z0-9]/gi,'');
+				  document.getElementsByTagName("html")[0].setAttribute("hash", hashAttr);
+				} else {
+				  // Fragment doesn't exist
+				  document.getElementsByTagName("html")[0].setAttribute("hash", "");
+				}
+		}
+		locationHashChanged();
+		window.onhashchange = locationHashChanged;
+
 		//aeonx.debug = true 
 		//aeonx.fetch('todomvc.aeon.json', aeonx.runJson); // http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/todomvc.aeon.json
 		aeonx.fetch('todomvc.aeon', aeonx.runAeon); // http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/todomvc.aeon
