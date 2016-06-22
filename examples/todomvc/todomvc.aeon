@@ -5,4 +5,11 @@
   .clear-completed {
     onclick: $Handler.clearCompleted;
   }
+  .filters {
+    a {
+      @onclick {
+        class!: "selected";
+      }
+    }
+  }
 }
