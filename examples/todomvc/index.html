@@ -56,14 +56,13 @@
 
 		// add the URL hash to the HTML-tag, so we can use CSS more effectively
 		function locationHashChanged() {
+				var hashAttr = '';
+
 				if(window.location.hash) {
-				  // Fragment exists
-				  var hashAttr = window.location.hash.replace(/[^a-z0-9]/gi,'');
-				  document.getElementsByTagName("html")[0].setAttribute("hash", hashAttr);
-				} else {
-				  // Fragment doesn't exist
-				  document.getElementsByTagName("html")[0].setAttribute("hash", "");
-				}
+				  hashAttr = window.location.hash.replace(/[^a-z0-9]/gi, '');
+				} 
+
+				document.getElementsByTagName('html')[0].setAttribute('hash', hashAttr);
 		}
 		locationHashChanged();
 		window.onhashchange = locationHashChanged;
