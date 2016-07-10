@@ -1,25 +1,35 @@
 
 /**
- *
+ * TODO move the .destroy to todomvc.aeon,
  */
 var $addTodo = function(e) {
   var msg = e.target[0].value
-  var newTag = document.createElement('li'); 
-  html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
-    '<button class="destroy" onclick="return window.Handler.delTodo(event) || false;"></button> </div> <input class="edit" value="asdf">'
+  if (msg) {
+    var newTag = document.createElement('li'); 
+    // before move .destory to .aeon:
+    var html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
+      '<button class="destroy" onclick="return window.Handler.delTodo(event) || false;"></button> </div> <input class="edit" value="asdf">'
 
-  newTag.innerHTML = html;
-  document.getElementsByClassName('todo-list')[0].appendChild(newTag);
-  var elm = document.querySelector( '.new-todo' )
-  elm.value = '';
+    // after move .destroy:
+    var html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
+      '<button someattr="" class="destroy"></button> </div> <input class="edit" value="asdf">'
+
+
+    newTag.innerHTML = html;
+    document.getElementsByClassName('todo-list')[0].appendChild(newTag);
+    var elm = document.querySelector( '.new-todo' )
+    elm.value = '';
+  }
 }
 
 
 /**
  *
  */
-var $delTodo = function(event) {
-  var todo = event.currentTarget.closest("li");  
+var $delTodo = function(e) {
+  alert('Shiva destroy!');
+  console.log(e);
+  var todo = e.currentTarget.closest("li");  
   todo.parentNode.removeChild(todo);
 }
 
