@@ -1,4 +1,6 @@
 var $translatr = require("./aeon-translatr.js");
+var $net = require("./aeon-net.js");
+var $domcrud = require("./aeon-domcrud.js");
 
 /**
  * data tree
@@ -33,25 +35,6 @@ var _data = {
 }
 
 
-
-/**
- *
- */
-var $fetch = function (path, success, error) {
-    var xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = function()
-    {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                if (success) success(xhr.responseText)
-            } else {
-                if (error) error(xhr)
-            }
-        }
-    }
-    xhr.open("GET", path, true)
-    xhr.send()
-}
 
 /**
  *
@@ -92,12 +75,12 @@ var $run = function(O, p, opts) {
     
         // String?
         else if (typeof value === 'string' || value instanceof String) {
-            _set(property, _unstringExec(value, _data.opts))
+            $domcrud.set(property, _unstringExec(value, _data.opts))
         }
     
         // Function?
         else if (typeof value === 'function') {
-            _set(property, value)    
+            $domcrud.set(property, value)    
         }
 
         // Plain Object?
@@ -105,7 +88,7 @@ var $run = function(O, p, opts) {
             _execObject(property, value)
         }
         else if (typeof value === 'boolean' || typeof value === 'number') {
-            _set(property, value)    
+            $domcrud.set(property, value)    
         }
         else {
             console.error('invalid value', value)
@@ -183,7 +166,7 @@ var _execObject = function(property, value) {
 var _execArray = function(property, value) {
     newValue = _unstringExec(value[1], _data.opts)
     newOperator = value[0]
-    _set(property, newValue, newOperator)
+    $domcrud.set(property, newValue, newOperator)
 }
 
 /**
@@ -423,7 +406,7 @@ var _evalIf = function (expression) {
 
         var trio = _parseCondition(withoutSel)
 
-        _data.cond.lft = _get(_data.cond.attr, _data.cond.sel)
+        _data.cond.lft = $domcrud.get(_data.cond.attr, _data.cond.sel)
 
         console.log('get cond result from:', _data.cond)
         if (_data.cond.oper) {
@@ -549,13 +532,13 @@ var _unstringExec = function(value, opts) {
             _data.src.attr = values[1].trim()
             _data.src.sel = values[0].trim()
 
-            value = _get(_data.src.attr, _data.src.sel) 
+            value = $domcrud.get(_data.src.attr, _data.src.sel) 
         }
         // c) empty or attribute from same selector:         data-foo
         else {
             if (value.length) {
                 opts.el = opts.e.target
-                value = _get(value, _data.selectors[0], opts)  // May 25th  
+                value = $domcrud.get(value, _data.selectors[0], opts)  // May 25th  
             }
             else {
                 value = ''
@@ -566,195 +549,8 @@ var _unstringExec = function(value, opts) {
     return value
 }
 
-/**
- * 
- */
-var _get = function(attribute, differentSelector, opts) {
-    var result = ''
-
-    if (differentSelector) {
-        selector = differentSelector
-    }
-    else {
-        selector = _data.selectors.join(' ')    
-    }
-    
-    if (opts && opts.hasOwnProperty('el')) {
-        var el = opts.el
-    }
-    else {
-        var el = document.querySelector( selector )
-    }
-
-    if (el) {
-        // attr or textcontent?
-        tag = el.tagName.toLowerCase()
-        if (attribute == 'value' && tag != 'input') { // use textcontent
-            result = el.textContent
-        }
-        else { // attr, when a=value and tag=input
-            result = el.getAttribute( attribute )
-        }
-
-        if (result === undefined || result === null) {
-            result = ''
-        }
-    }
-    
-    return result
-}
 
 
-var _toNum = function (someString) {
-    var someNum = parseFloat(someString)
-    if (isNaN(someNum)) someNum = 0
-    return someNum
-}
-
-/**
- *
- */
-var _operate = function (selector, attribute, newOperator, newValue) {
-    var existingValue = _get(attribute, selector)
-    switch(newOperator) {
-        case '+':
-            newValue = _toNum(existingValue) + _toNum(newValue) 
-            break
-        case '-':
-            newValue = _toNum(existingValue) - _toNum(newValue)  
-            break
-        case '*':
-            newValue = _toNum(existingValue) * _toNum(newValue)  
-            break
-        case '/':
-            newValue = _toNum(existingValue) / _toNum(newValue) 
-            break
-        case '%':
-            newValue = _toNum(existingValue) % _toNum(newValue) 
-            break
-        case '.':
-            newValue = existingValue.concat(newValue)
-            break
-        case '!': // toggle on/off
-            // split value by spaces
-            var existingValues = existingValue.split(' ')
-            // check for value...
-            var key = existingValues.indexOf(newValue) // TODO indexOf missing from IE8
-
-            if (key > -1) {
-                // ... exists.  Remove it.
-                console.debug('removed', existingValues.splice(key, 1))
-            }
-            else {
-                // ... doesn't exist.  Add it.
-                existingValues.push(newValue)
-            }
-            newValue = existingValues.join(' ')
-            break
-        default:
-            console.error('invalid newOperator', newOperator)
-    }
-
-    return newValue
-}
-
-/**
- * 
- */
-var _set = function(selatts, newValue, newOperator, opts) {
-    
-    // if a javascript element...
-    if (selatts.charAt(0) == '`' && selatts.charAt(1) == '$') {
-        rawTarget = _unstring(selatts).substr(1)
-        // split on dot
-        pieces = rawTarget.split('.')
-
-        extLink = window
-        for (var i = 0; i < pieces.length-1; i++) {
-
-            if (typeof extLink[ pieces[i] ] != 'undefined') {
-                extLink = extLink[ pieces[i] ]
-            }
-            else {
-                extLink = null
-                break
-            }
-        }
-        // final param of pieces is the element to update/call
-        if (pieces.length > 1) {
-
-            target = pieces.pop()
-        }
-
-        // set the target
-        if (extLink !== null) { 
-            if (typeof extLink[target] == 'function') {
-                ext = extLink[target]
-                ext(newValue)
-            }
-            else {
-                if (newOperator) {
-                    newValue = _operate(selector, attribute, newOperator, newValue)
-                }
-
-                extLink[target] = newValue
-            }
-        }
-        else {
-            console.error('invalid property target', selatts); debugger; 
-        }
-
-
-    }
-    // ... else, set DOM object
-    else {
-        if (selatts.indexOf('&') !== -1) {
-            var pieces = selatts.split('&')
-            selector = pieces[0].trim()
-            attribute = pieces[1].trim()
-        }
-        else {
-            selector = _data.selectors.join(' ')
-            attribute = selatts
-        }
-
-        /// determine final `value`
-        if (newOperator) {
-            newValue = _operate(selector, attribute, newOperator, newValue)
-        }
-
-        if (!selector) debugger
-
-        /// modify all elements
-        var els = document.querySelectorAll( selector )
-        var i = 0
-        for( i=0; i < els.length; i++ ) {
-            _setAttribute(els[i], attribute, newValue)
-        }
-
-    }
-    
-}
-
-/**
- *
- */
-var _setAttribute = function(el, attribute, newValue) {
-    tag = el.tagName.toLowerCase()
-    if (attribute == 'value' && tag != 'input') { 
-        el.textContent = newValue
-    }
-    else { // attr, when a=value and tag=input
-        if(el.hasAttribute( attribute ) == false) {
-            var a = document.createAttribute( attribute )
-            a.value = newValue
-            el.setAttributeNode(a)
-        }
-        else {
-            el.setAttribute(attribute, newValue)
-        }
-    }
-}
 
 /**
  * 
@@ -764,13 +560,8 @@ aeonx = {
     //run: $run,
     runAeon: $runAeon,
     runJson: $runJson,
-    fetch: $fetch
+    fetch: $net.fetch
 }
 
-/**
- * 
- */
-//aeont = {
-//    parse: $parse
-//}
+
 
