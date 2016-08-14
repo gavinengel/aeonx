@@ -1,19 +1,35 @@
 
 /**
+ *
+ */
+var $testr = function(e) {
+    alert('testr!');
+  if (e.target) {
+
+    console.log({'testerE':e});
+  }
+}
+
+
+/**
  * TODO move the .destroy to todomvc.aeon,
+ * TODO move the .toggle to todomvc.aeon,
  */
 var $addTodo = function(e) {
   var msg = e.target[0].value
   if (msg) {
     var newTag = document.createElement('li'); 
-    // before move .destory to .aeon:
+    // before move .destory and .toggle to .aeon:
     var html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
       '<button class="destroy" onclick="return window.Handler.delTodo(event) || false;"></button> </div> <input class="edit" value="asdf">'
 
     // after move .destroy:
-    var html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
-      '<button someattr="" class="destroy"></button> </div> <input class="edit" value="asdf">'
+    //var html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
+    //  '<button someattr="" class="destroy"></button> </div> <input class="edit" value="asdf">'
 
+    // after move .toggle:
+    var html = '<div class="view"><input class="toggle" type="checkbox"><label>'+msg+'</label>' +
+      '<button class="destroy" onclick="return window.Handler.delTodo(event) || false;"></button> </div> <input class="edit" value="asdf">'
 
     newTag.innerHTML = html;
     document.getElementsByClassName('todo-list')[0].appendChild(newTag);
@@ -121,6 +137,7 @@ var $getNearestLiId = function(node) {
 
 Handler = {
     //destroy: $destroy,
+    testr: $testr,
     clearCompleted: $clearCompleted,
     addTodo: $addTodo,
     delTodo: $delTodo,

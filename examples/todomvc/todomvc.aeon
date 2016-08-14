@@ -7,9 +7,14 @@
   }
   .filters {
     a {
-      @onclick {
+      @ondblclick {
         class!: "selected";
       }
     }
+  }
+  .toggle {
+    @onclick {
+      someattr: $Handler.testr;
+    } 
   }
 }
