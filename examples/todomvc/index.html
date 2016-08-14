@@ -55,7 +55,7 @@
 	<script type="text/javascript">
 
 		// add the URL hash to the HTML-tag, so we can use CSS more effectively
-		function locationHashChanged() {
+		function flashHash() {
 				var hashAttr = '';
 
 				if(window.location.hash) {
@@ -64,8 +64,8 @@
 
 				document.getElementsByTagName('html')[0].setAttribute('hash', hashAttr);
 		}
-		locationHashChanged();
-		window.onhashchange = locationHashChanged;
+		flashHash();
+		window.onhashchange = flashHash;
 
 		//aeonx.debug = true 
 		//aeonx.fetch('todomvc.aeon.json', aeonx.runJson); // http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/todomvc.aeon.json
