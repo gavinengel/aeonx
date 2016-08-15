@@ -246,30 +246,15 @@ if (selector == '.todoapp .toggle') debugger;
                 if (target.matches(selector)) {
                     if (e != lastEvent) {
                         lastEvent = e;
-                        ///handler.call(target, e);
                         console.log('found!', selector)
                         console.log(target)
                         console.log({a:a, eId:eId, _data:_data})
-///
+
                         eData = _data.eData[ eId ]
 
-                        var foundFail = false
+                        
+                        var foundFail = $conditionr.multiCompare(e, eData)
 
-                        for (var j=0; j < eData.conditions.length; j++ ) {
-                            var cnd = eData.conditions[j]
-                            if (cnd.lft) { 
-                                if (cnd.oper && cnd.rgt) {
-                                    if ($debug) console.log('3 part condition found', {e:e, eData: eData})
-
-                                    if (!$conditionr.compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
-                                }    
-                                else {
-                                    if ($debug) console.log('1 part condition found', {e:e, eData: eData})
-
-                                    if (!e[cnd.lft]) foundFail = true
-                                }
-                            }
-                        }
                         
                         if (!foundFail || !eData.conditions.length) { 
                             if ($debug) console.log('condition passed', {e:e, eData: eData})
@@ -279,7 +264,6 @@ if (selector == '.todoapp .toggle') debugger;
                         else {
                             if ($debug) console.log('condition failed', {e:e, eData: eData})
                         }
-///
 
                         break;
                     }
@@ -287,42 +271,6 @@ if (selector == '.todoapp .toggle') debugger;
             }
         }, false);
 
-        ///
-/*
-        els[i].addEventListener(eventType, function(e){
-            if ($debug) console.log(e)
-            eAttr = 'data-' + e.type + '-eid'
-            eId = e.currentTarget.getAttribute( eAttr )
-            eData = _data.eData[ eId ]
-
-            var foundFail = false
-
-            for (var j=0; j < eData.conditions.length; j++ ) {
-                var cnd = eData.conditions[j]
-                if (cnd.lft) { 
-                    if (cnd.oper && cnd.rgt) {
-                        if ($debug) console.log('3 part condition found', {e:e, eData: eData})
-
-                        if (!$conditionr.compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
-                    }    
-                    else {
-                        if ($debug) console.log('1 part condition found', {e:e, eData: eData})
-
-                        if (!e[cnd.lft]) foundFail = true
-                    }
-                }
-            }
-            
-            if (!foundFail || !eData.conditions.length) { 
-                if ($debug) console.log('condition passed', {e:e, eData: eData})
-                $run(eData.aeon, null, {el: e.currentTarget, e: e})
-
-            }
-            else {
-                if ($debug) console.log('condition failed', {e:e, eData: eData})
-            }
-        })*/
-    //} //endfor
 }
 
 

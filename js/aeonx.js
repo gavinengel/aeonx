@@ -292,30 +292,15 @@
 	                if (target.matches(selector)) {
 	                    if (e != lastEvent) {
 	                        lastEvent = e;
-	                        ///handler.call(target, e);
 	                        console.log('found!', selector)
 	                        console.log(target)
 	                        console.log({a:a, eId:eId, _data:_data})
-	///
+
 	                        eData = _data.eData[ eId ]
 
-	                        var foundFail = false
+	                        
+	                        var foundFail = $conditionr.multiCompare(e, eData)
 
-	                        for (var j=0; j < eData.conditions.length; j++ ) {
-	                            var cnd = eData.conditions[j]
-	                            if (cnd.lft) { 
-	                                if (cnd.oper && cnd.rgt) {
-	                                    if ($debug) console.log('3 part condition found', {e:e, eData: eData})
-
-	                                    if (!$conditionr.compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
-	                                }    
-	                                else {
-	                                    if ($debug) console.log('1 part condition found', {e:e, eData: eData})
-
-	                                    if (!e[cnd.lft]) foundFail = true
-	                                }
-	                            }
-	                        }
 	                        
 	                        if (!foundFail || !eData.conditions.length) { 
 	                            if ($debug) console.log('condition passed', {e:e, eData: eData})
@@ -325,7 +310,6 @@
 	                        else {
 	                            if ($debug) console.log('condition failed', {e:e, eData: eData})
 	                        }
-	///
 
 	                        break;
 	                    }
@@ -333,42 +317,6 @@
 	            }
 	        }, false);
 
-	        ///
-	/*
-	        els[i].addEventListener(eventType, function(e){
-	            if ($debug) console.log(e)
-	            eAttr = 'data-' + e.type + '-eid'
-	            eId = e.currentTarget.getAttribute( eAttr )
-	            eData = _data.eData[ eId ]
-
-	            var foundFail = false
-
-	            for (var j=0; j < eData.conditions.length; j++ ) {
-	                var cnd = eData.conditions[j]
-	                if (cnd.lft) { 
-	                    if (cnd.oper && cnd.rgt) {
-	                        if ($debug) console.log('3 part condition found', {e:e, eData: eData})
-
-	                        if (!$conditionr.compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
-	                    }    
-	                    else {
-	                        if ($debug) console.log('1 part condition found', {e:e, eData: eData})
-
-	                        if (!e[cnd.lft]) foundFail = true
-	                    }
-	                }
-	            }
-	            
-	            if (!foundFail || !eData.conditions.length) { 
-	                if ($debug) console.log('condition passed', {e:e, eData: eData})
-	                $run(eData.aeon, null, {el: e.currentTarget, e: e})
-
-	            }
-	            else {
-	                if ($debug) console.log('condition failed', {e:e, eData: eData})
-	            }
-	        })*/
-	    //} //endfor
 	}
 
 
@@ -1101,6 +1049,30 @@
 	    return result
 	}
 
+	/**
+	 *
+	 */
+	var $multiCompare = function(e, eData) {
+	    var foundFail = false
+	    
+	    for (var j=0; j < eData.conditions.length; j++ ) {
+	        var cnd = eData.conditions[j]
+	        if (cnd.lft) { 
+	            if (cnd.oper && cnd.rgt) {
+	                if ($debug) console.log('3 part condition found', {e:e, eData: eData})
+
+	                if (!$compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
+	            }    
+	            else {
+	                if ($debug) console.log('1 part condition found', {e:e, eData: eData})
+
+	                if (!e[cnd.lft]) foundFail = true
+	            }
+	        }
+	    }
+
+	    return foundFail
+	}
 
 	/**
 	 *
@@ -1132,13 +1104,13 @@
 	            _data.cond.attr = withoutSel = pieces[1].trim()
 	        }    
 
-	        var trio = $conditionr.parse(withoutSel, _data)
+	        var trio = $parse(withoutSel, _data)
 
 	        _data.cond.lft = $domcrud.get(_data.cond.attr, _data.cond.sel)
 
 	        console.log('get cond result from:', _data.cond)
 	        if (_data.cond.oper) {
-	            _data.cond.result = $conditionr.compare(_data.cond.lft, _data.cond.oper, _data.cond.rgt)
+	            _data.cond.result = $compare(_data.cond.lft, _data.cond.oper, _data.cond.rgt)
 	        }
 	        else if (_data.cond.lft) {
 	            _data.cond.result = true
@@ -1176,6 +1148,7 @@
 
 	module.exports = {
 	    compare: $compare,
+	    multiCompare: $multiCompare,
 	    parse: $parse,
 	    evalIf: $evalIf
 	};

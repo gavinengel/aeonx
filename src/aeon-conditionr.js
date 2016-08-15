@@ -51,6 +51,30 @@ var $compare = function(lft, oper, rgt, typecast) {
     return result
 }
 
+/**
+ *
+ */
+var $multiCompare = function(e, eData) {
+    var foundFail = false
+    
+    for (var j=0; j < eData.conditions.length; j++ ) {
+        var cnd = eData.conditions[j]
+        if (cnd.lft) { 
+            if (cnd.oper && cnd.rgt) {
+                if ($debug) console.log('3 part condition found', {e:e, eData: eData})
+
+                if (!$compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
+            }    
+            else {
+                if ($debug) console.log('1 part condition found', {e:e, eData: eData})
+
+                if (!e[cnd.lft]) foundFail = true
+            }
+        }
+    }
+
+    return foundFail
+}
 
 /**
  *
@@ -82,13 +106,13 @@ var $evalIf = function (expression) {
             _data.cond.attr = withoutSel = pieces[1].trim()
         }    
 
-        var trio = $conditionr.parse(withoutSel, _data)
+        var trio = $parse(withoutSel, _data)
 
         _data.cond.lft = $domcrud.get(_data.cond.attr, _data.cond.sel)
 
         console.log('get cond result from:', _data.cond)
         if (_data.cond.oper) {
-            _data.cond.result = $conditionr.compare(_data.cond.lft, _data.cond.oper, _data.cond.rgt)
+            _data.cond.result = $compare(_data.cond.lft, _data.cond.oper, _data.cond.rgt)
         }
         else if (_data.cond.lft) {
             _data.cond.result = true
@@ -126,6 +150,7 @@ var $parse = function (condition, _data) {
 
 module.exports = {
     compare: $compare,
+    multiCompare: $multiCompare,
     parse: $parse,
     evalIf: $evalIf
 };
