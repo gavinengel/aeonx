@@ -218,7 +218,6 @@ var _execElseRule = function (value) {
  */
 var _addListeners = function (eventType, eventConds, selector, value) {
     // we must add a listener for the current selector + this onEvent.
-if (selector == '.todoapp .toggle') debugger; // delme
     ///var els = document.querySelectorAll( selector )
     var delegateSel = ($delegate)? $delegate : 'body' 
     var delegate = document.querySelectorAll( delegateSel )[0]      

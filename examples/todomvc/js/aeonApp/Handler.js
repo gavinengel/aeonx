@@ -21,16 +21,21 @@ var $addTodo = function(e) {
   if (msg) {
     var newTag = document.createElement('li'); 
     // before move .destory and .toggle to .aeon:
-    var html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
-      '<button class="destroy" onclick="return window.Handler.delTodo(event) || false;"></button> </div> <input class="edit" value="asdf">'
+    //var html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
+    //  '<button class="destroy" onclick="return window.Handler.delTodo(event) || false;"></button> </div> <input class="edit" value="asdf">'
 
     // after move .destroy:
     //var html = '<div class="view"><input class="toggle" type="checkbox" onclick="return window.Handler.toggleTodo(event) || false;"><label>'+msg+'</label>' +
     //  '<button someattr="" class="destroy"></button> </div> <input class="edit" value="asdf">'
 
     // after move .toggle:
-    var html = '<div class="view"><input class="toggle" type="checkbox"><label>'+msg+'</label>' +
+    //var html = '<div class="view"><input class="toggle" type="checkbox"><label>'+msg+'</label>' +
+    //  '<button class="destroy"></button> </div> <input class="edit" value="asdf">'
+
+    // convert label to input:
+    var html = '<div class="view"><input class="toggle" type="checkbox"><input class="label redundant" onblur="return window.Handler.blurTodo(event) || false;" value="'+msg+'" disabled="disabled" />' +
       '<button class="destroy"></button> </div> <input class="edit" value="asdf">'
+
 
     newTag.innerHTML = html;
     document.getElementsByClassName('todo-list')[0].appendChild(newTag);
@@ -61,6 +66,23 @@ var $toggleTodo = function(e) {
   todo.setAttribute('class', newStatus)
   return true
 }
+
+/**
+ *
+ */
+var $editTodo = function(e) {
+  var target =  e.srcElement;
+  target.disabled = (target.disabled == true)? false : true;
+}
+
+/**
+ *
+ */
+var $blurTodo = function(e) {
+  var target =  e.srcElement;
+  target.disabled = true;
+}
+
 
 
 var $clearCompleted = function(e) {
@@ -142,5 +164,7 @@ Handler = {
     clearCompleted: $clearCompleted,
     addTodo: $addTodo,
     delTodo: $delTodo,
-    toggleTodo: $toggleTodo
+    toggleTodo: $toggleTodo,
+    editTodo: $editTodo,
+    blurTodo: $blurTodo
 }

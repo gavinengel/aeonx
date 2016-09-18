@@ -22,4 +22,12 @@
       someattr: $Handler.delTodo;
     }
   }
+  .label {
+    @ondblclick {
+      someattr: $Handler.editTodo;
+    } 
+  }
+  .zzz {
+    onblur: $Handler.blurTodo;
+  }
 }
