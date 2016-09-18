@@ -14,17 +14,23 @@
   }
   .toggle{
     @onclick {
-      someattr: $Handler.toggleTodo;
+      data-onclick: $Handler.toggleTodo;
     } 
   }
   .destroy {
     @onclick {
-      someattr: $Handler.delTodo;
+      data-onclick: $Handler.delTodo;
     }
   }
   .label {
     @ondblclick {
-      someattr: $Handler.editTodo;
+      data-ondblclick: $Handler.editTodo;
     } 
+    @onmouseup(button = 1;ctrlKey=true)  {
+      data-onmouseup: $Handler.testr;
+    }    
+    @onfocusout {
+      data-onfocusout: $Handler.blurTodo;
+    }
   }
 }

@@ -31,7 +31,7 @@ var $addTodo = function(e) {
     //  '<button class="destroy"></button> </div> <input class="edit" value="asdf">'
 
     // convert label to input:
-    var html = '<div class="view"><input class="toggle" type="checkbox"><input class="label redundant" onblur="return window.Handler.blurTodo(event) || false;" value="'+msg+'" disabled="disabled" />' +
+    var html = '<div class="view"><input class="toggle" type="checkbox"><input class="label" value="'+msg+'" disabled="disabled" />' +
       '<button class="destroy"></button> </div> <input class="edit" value="asdf">'
 
 
