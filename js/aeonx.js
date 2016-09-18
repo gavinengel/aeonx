@@ -453,6 +453,7 @@
 
 	  /** tokenizer **/
 	  raw = raw.replace(/;/g, "; ") 
+	  raw = raw.replace(/{/g, " {") 
 	  var tokens = raw.match(/\S+/g)
 	  if ($debug) console.log({tokens1: tokens})
 

@@ -6,6 +6,7 @@ var _tokenize = function (raw) {
 
   /** tokenizer **/
   raw = raw.replace(/;/g, "; ") 
+  raw = raw.replace(/{/g, " {") // why?  because leaving out space in this causes error:  .someclass{ 
   var tokens = raw.match(/\S+/g)
   if ($debug) console.log({tokens1: tokens})
 

@@ -13,8 +13,6 @@ var $testr = function(e) {
 
 
 /**
- * TODO move the .destroy to todomvc.aeon,
- * TODO move the .toggle to todomvc.aeon,
  */
 var $addTodo = function(e) {
   var msg = e.target[0].value
