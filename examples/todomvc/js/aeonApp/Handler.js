@@ -1,4 +1,5 @@
 
+
 /**
  *
  */
@@ -29,7 +30,7 @@ var $addTodo = function(e) {
 
     // after move .toggle:
     var html = '<div class="view"><input class="toggle" type="checkbox"><label>'+msg+'</label>' +
-      '<button class="destroy" onclick="return window.Handler.delTodo(event) || false;"></button> </div> <input class="edit" value="asdf">'
+      '<button class="destroy"></button> </div> <input class="edit" value="asdf">'
 
     newTag.innerHTML = html;
     document.getElementsByClassName('todo-list')[0].appendChild(newTag);
@@ -45,7 +46,8 @@ var $addTodo = function(e) {
 var $delTodo = function(e) {
   alert('Shiva destroy!');
   console.log(e);
-  var todo = e.currentTarget.closest("li");  
+  console.log({currentTarget:e.currentTarget});
+  var todo = e.srcElement.closest("li");  
   todo.parentNode.removeChild(todo);
 }
 

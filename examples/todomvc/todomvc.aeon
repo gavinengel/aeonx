@@ -17,4 +17,9 @@
       someattr: $Handler.testr;
     } 
   }
+  .destroy {
+    @onclick {
+      someattr: $Handler.delTodo;
+    }
+  }
 }
