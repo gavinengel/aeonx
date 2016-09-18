@@ -14,7 +14,7 @@
   }
   .toggle {
     @onclick {
-      someattr: $Handler.testr;
+      someattr: $Handler.toggleTodo;
     } 
   }
   .destroy {

@@ -44,7 +44,6 @@ var $addTodo = function(e) {
  *
  */
 var $delTodo = function(e) {
-  alert('Shiva destroy!');
   console.log(e);
   console.log({currentTarget:e.currentTarget});
   var todo = e.srcElement.closest("li");  
@@ -55,8 +54,8 @@ var $delTodo = function(e) {
 /**
  *
  */
-var $toggleTodo = function(event) {
-  var todo = event.currentTarget.closest("li");  
+var $toggleTodo = function(e) {
+  var todo = e.srcElement.closest("li");  
   currentStatus = todo.getAttribute('class')
   newStatus = (currentStatus == 'completed')? '' : 'completed'
   todo.setAttribute('class', newStatus)
