@@ -75,12 +75,12 @@ var $run = function(O, p, opts) {
     
         // String?
         else if (typeof value === 'string' || value instanceof String) {
-            $domcrud.set(property, _unstringExec(value, _data.opts))
+            $domcrud.set(property, _unstringExec(value, _data.opts), null, null, _data)
         }
     
         // Function?
         else if (typeof value === 'function') {
-            $domcrud.set(property, value)    
+            $domcrud.set(property, value, null, null, _data)    
         }
 
         // Plain Object?
@@ -88,7 +88,7 @@ var $run = function(O, p, opts) {
             _execObject(property, value)
         }
         else if (typeof value === 'boolean' || typeof value === 'number') {
-            $domcrud.set(property, value)    
+            $domcrud.set(property, value, null, null, _data)    
         }
         else {
             console.error('invalid value', value)
@@ -117,7 +117,7 @@ var _execObject = function(property, value) {
 var _execArray = function(property, value) {
     newValue = _unstringExec(value[1], _data.opts)
     newOperator = value[0]
-    $domcrud.set(property, newValue, newOperator)
+    $domcrud.set(property, newValue, newOperator, null, _data)
 }
 
 /**

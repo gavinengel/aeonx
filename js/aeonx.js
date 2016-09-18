@@ -47,7 +47,7 @@
 	var $translatr = __webpack_require__(1);
 	var $net = __webpack_require__(2);
 	var $domcrud = __webpack_require__(3);
-	var $conditionr = __webpack_require__(5);
+	var $conditionr = __webpack_require__(4);
 
 	/**
 	 * data tree
@@ -121,12 +121,12 @@
 	    
 	        // String?
 	        else if (typeof value === 'string' || value instanceof String) {
-	            $domcrud.set(property, _unstringExec(value, _data.opts))
+	            $domcrud.set(property, _unstringExec(value, _data.opts), null, null, _data)
 	        }
 	    
 	        // Function?
 	        else if (typeof value === 'function') {
-	            $domcrud.set(property, value)    
+	            $domcrud.set(property, value, null, null, _data)    
 	        }
 
 	        // Plain Object?
@@ -134,7 +134,7 @@
 	            _execObject(property, value)
 	        }
 	        else if (typeof value === 'boolean' || typeof value === 'number') {
-	            $domcrud.set(property, value)    
+	            $domcrud.set(property, value, null, null, _data)    
 	        }
 	        else {
 	            console.error('invalid value', value)
@@ -163,7 +163,7 @@
 	var _execArray = function(property, value) {
 	    newValue = _unstringExec(value[1], _data.opts)
 	    newOperator = value[0]
-	    $domcrud.set(property, newValue, newOperator)
+	    $domcrud.set(property, newValue, newOperator, null, _data)
 	}
 
 	/**
@@ -794,7 +794,7 @@
 	/**
 	 * 
 	 */
-	var $set = function(selatts, newValue, newOperator, opts) {
+	var $set = function(selatts, newValue, newOperator, opts, _data) {
 	    
 	    // if a javascript element...
 	    if (selatts.charAt(0) == '`' && selatts.charAt(1) == '$') {
@@ -847,6 +847,7 @@
 	            attribute = pieces[1].trim()
 	        }
 	        else {
+	            console.log({_data:_data})
 	            selector = _data.selectors.join(' ')
 	            attribute = selatts
 	        }
@@ -949,7 +950,7 @@
 	/**
 	 * 
 	 */
-	var $get = function(attribute, differentSelector, opts) {
+	var $get = function(attribute, differentSelector, opts, _data) {
 	    var result = ''
 
 	    if (differentSelector) {
@@ -991,8 +992,7 @@
 	};
 
 /***/ },
-/* 4 */,
-/* 5 */
+/* 4 */
 /***/ function(module, exports) {
 
 	$debug = true

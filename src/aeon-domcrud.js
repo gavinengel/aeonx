@@ -4,7 +4,7 @@
 /**
  * 
  */
-var $set = function(selatts, newValue, newOperator, opts) {
+var $set = function(selatts, newValue, newOperator, opts, _data) {
     
     // if a javascript element...
     if (selatts.charAt(0) == '`' && selatts.charAt(1) == '$') {
@@ -57,6 +57,7 @@ var $set = function(selatts, newValue, newOperator, opts) {
             attribute = pieces[1].trim()
         }
         else {
+            console.log({_data:_data})
             selector = _data.selectors.join(' ')
             attribute = selatts
         }
@@ -159,7 +160,7 @@ var _toNum = function (someString) {
 /**
  * 
  */
-var $get = function(attribute, differentSelector, opts) {
+var $get = function(attribute, differentSelector, opts, _data) {
     var result = ''
 
     if (differentSelector) {
