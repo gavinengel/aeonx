@@ -24,6 +24,7 @@ html[hash="completed"] .todoapp .todo-list li.completed {
     font-size: 24px;
 }
 
-.todoapp li.completed {
+.todoapp li.completed .label{
   text-decoration: line-through;
+  color: #d9d9d9;
 }
