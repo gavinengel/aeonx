@@ -14,7 +14,7 @@ var $testr = function(e) {
 
 /**
  */
-var $addTodo = function(e, msg) {
+var $addTodo = function(e, msg, id, skipStorage) {
   if (e) var msg = e.target[0].value;
 
   if (msg) {
@@ -35,15 +35,18 @@ var $addTodo = function(e, msg) {
     var html = '<div class="view"><input class="toggle" type="checkbox"><input class="label" value="'+msg+'" disabled="disabled" />' +
       '<button class="destroy"></button> </div> <input class="edit" value="asdf">'
 
-
+    var id = id || Math.random().toString(36).substr(2, 9);
+    newTag.setAttribute('data-id', id);
     newTag.innerHTML = html;
     document.getElementsByClassName('todo-list')[0].appendChild(newTag);
     var elm = document.querySelector( '.new-todo' )
     elm.value = '';
 
-    var todos = JSON.parse(localStorage.getItem('todos'));
-    todos.push(msg);
-    localStorage.setItem('todos', JSON.stringify(todos));
+    if (!skipStorage) {
+      var todos = JSON.parse(localStorage.getItem('todos')) || [];
+      todos.push({id:id, msg: msg });
+      localStorage.setItem('todos', JSON.stringify(todos));
+    }
   }
 }
 

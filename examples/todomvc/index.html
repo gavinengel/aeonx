@@ -56,8 +56,18 @@
 
 		// re-add existing todos
 		var todos = JSON.parse(localStorage.getItem('todos'));
-		for (var i = 0; i < todos.length; i++) {
-			window.Handler.addTodo(null, todos[i]);
+		if (todos) {
+			for (var i = 0; i < todos.length; i++) {
+				if (todos[i].msg) {
+					window.Handler.addTodo(null, todos[i].msg, todos[i].id, true);
+						console.log('yup');
+					console.log(todos[i]);
+				}
+				else {
+					console.log('nope');
+					console.log(todos[i]);
+				}
+			}
 		}
 
 
