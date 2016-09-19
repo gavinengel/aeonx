@@ -32,7 +32,8 @@ var $addTodo = function(e, msg, id, completed, skipStorage) {
     //  '<button class="destroy"></button> </div> <input class="edit" value="asdf">'
 
     // convert label to input:
-    var html = '<div class="view"><input class="toggle" type="checkbox"><input class="label" value="'+msg+'" disabled="disabled" />' +
+    var checked = (completed)? 'checked="checked"' : '';
+    var html = '<div class="view"><input class="toggle" type="checkbox" '+checked+'><input class="label" value="'+msg+'" disabled="disabled" />' +
       '<button class="destroy"></button> </div> <input class="edit" value="asdf">'
 
     var id = id || Math.random().toString(36).substr(2, 9);
