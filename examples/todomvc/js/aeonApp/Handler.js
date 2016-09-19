@@ -14,8 +14,9 @@ var $testr = function(e) {
 
 /**
  */
-var $addTodo = function(e) {
-  var msg = e.target[0].value
+var $addTodo = function(e, msg) {
+  if (e) var msg = e.target[0].value;
+
   if (msg) {
     var newTag = document.createElement('li'); 
     // before move .destory and .toggle to .aeon:
@@ -39,6 +40,10 @@ var $addTodo = function(e) {
     document.getElementsByClassName('todo-list')[0].appendChild(newTag);
     var elm = document.querySelector( '.new-todo' )
     elm.value = '';
+
+    var todos = JSON.parse(localStorage.getItem('todos'));
+    todos.push(msg);
+    localStorage.setItem('todos', JSON.stringify(todos));
   }
 }
 
