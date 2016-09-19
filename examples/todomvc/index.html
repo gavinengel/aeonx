@@ -55,10 +55,10 @@
 	<script type="text/javascript">
 
 		// re-add existing todos
-		var todos = JSON.parse(localStorage.getItem('todos'));
+		var todos = JSON.parse(localStorage.getItem('todos')) || [];
 		if (todos) {
 			for (var i = 0; i < todos.length; i++) {
-				if (todos[i].msg) {
+				if (todos[i] && todos[i].id) {
 					window.Handler.addTodo(null, todos[i].msg, todos[i].id, true);
 						console.log('yup');
 					console.log(todos[i]);

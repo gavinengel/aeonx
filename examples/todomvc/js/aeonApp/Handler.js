@@ -43,6 +43,7 @@ var $addTodo = function(e, msg, id, skipStorage) {
     elm.value = '';
 
     if (!skipStorage) {
+      // add to localStorage
       var todos = JSON.parse(localStorage.getItem('todos')) || [];
       todos.push({id:id, msg: msg });
       localStorage.setItem('todos', JSON.stringify(todos));
@@ -58,7 +59,22 @@ var $delTodo = function(e) {
   console.log(e);
   console.log({currentTarget:e.currentTarget});
   var todo = e.srcElement.closest("li");  
+  var id = todo.getAttribute('data-id');
   todo.parentNode.removeChild(todo);
+
+  // remove from localStorage
+  var todos = JSON.parse(localStorage.getItem('todos')) || [];
+  console.log({remtodos:todos})
+  if (todos) {
+    for (var i = 0; i < todos.length; i++) {
+      if (todos[i] && todos[i].id == id) {
+        //delete todos[i];
+        todos.splice(i, 1) 
+      }
+    }
+  }
+  localStorage.setItem('todos', JSON.stringify(todos));
+
 }
 
 
