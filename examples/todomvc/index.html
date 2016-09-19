@@ -59,7 +59,8 @@
 		if (todos) {
 			for (var i = 0; i < todos.length; i++) {
 				if (todos[i] && todos[i].id) {
-					window.Handler.addTodo(null, todos[i].msg, todos[i].id, true);
+					var completed = todos[i].completed || false;
+					window.Handler.addTodo(null, todos[i].msg, todos[i].id, completed, true);
 				}
 			}
 		}

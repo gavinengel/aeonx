@@ -14,7 +14,7 @@ var $testr = function(e) {
 
 /**
  */
-var $addTodo = function(e, msg, id, skipStorage) {
+var $addTodo = function(e, msg, id, completed, skipStorage) {
   if (e) var msg = e.target[0].value;
 
   if (msg) {
@@ -37,6 +37,10 @@ var $addTodo = function(e, msg, id, skipStorage) {
 
     var id = id || Math.random().toString(36).substr(2, 9);
     newTag.setAttribute('data-id', id);
+
+    newStatus = (completed)? 'completed' : '';
+    newTag.setAttribute('class', newStatus)
+
     newTag.innerHTML = html;
     document.getElementsByClassName('todo-list')[0].appendChild(newTag);
     var elm = document.querySelector( '.new-todo' )
@@ -86,6 +90,21 @@ var $toggleTodo = function(e) {
   currentStatus = todo.getAttribute('class')
   newStatus = (currentStatus == 'completed')? '' : 'completed'
   todo.setAttribute('class', newStatus)
+
+  // remove from localStorage
+  var id = todo.getAttribute('data-id');
+  var todos = JSON.parse(localStorage.getItem('todos')) || [];
+  console.log({remtodos:todos})
+  if (todos) {
+    for (var i = 0; i < todos.length; i++) {
+      if (todos[i] && todos[i].id == id) {
+        //delete todos[i];
+        todos[i].completed = (newStatus)? true : false; 
+      }
+    }
+  }
+  localStorage.setItem('todos', JSON.stringify(todos));
+
   return true
 }
 
