@@ -41,7 +41,7 @@
 		<footer class="info">
 			<p>Double-click to edit a todo</p>
 			<p>Created by <a href="http://twitter.com/gavinengel">Gavin Engel</a></p>
-			<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+			<p>Inspired by <a href="http://todomvc.com">TodoMVC</a></p>
 		</footer>
 		<script src="node_modules/todomvc-common/base.js"></script>
 
@@ -52,6 +52,8 @@
 		<script src="js/aeonApp/Model.js"></script>
 	<script src="../../js/aeonx.js" type="text/javascript"></script> <!-- http://rawgit.com/gavinengel/aeonx/master/js/aeonx.js -->
 	<!-- <script src="filters.js" type="text/javascript"></script> <!-- http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/filters.js -->
+	<script src="http://rawgit.com/gavinengel/rehash/master/rehash.js" type="text/javascript"></script>
+
 	<script type="text/javascript">
 
 		// re-add existing todos
@@ -64,19 +66,6 @@
 				}
 			}
 		}
-
-		// add the URL hash to the HTML-tag, so we can use CSS more effectively
-		function rehash() {
-				var hashAttr = '';
-
-				if(window.location.hash) {
-				  hashAttr = window.location.hash.replace(/[^a-z0-9]/gi, '');
-				} 
-
-				document.getElementsByTagName('html')[0].setAttribute('hash', hashAttr);
-		}
-		rehash();
-		window.onhashchange = rehash;
 
 		//aeonx.debug = true 
 		//aeonx.fetch('todomvc.aeon.json', aeonx.runJson); // http://rawgit.com/gavinengel/aeonx/master/examples/todomvc/todomvc.aeon.json

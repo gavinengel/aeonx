@@ -32,5 +32,8 @@
     @onfocusout {
       data-onfocusout: $Handler.blurTodo;
     }
+    @onmouseout {
+      data-onfocusout: $Handler.blurTodo;
+    }
   }
 }
