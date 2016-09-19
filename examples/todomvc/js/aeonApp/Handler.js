@@ -1,5 +1,4 @@
 
-
 /**
  */
 var $addTodo = function(e, msg, id, completed, skipStorage) {
@@ -38,19 +37,15 @@ var $addTodo = function(e, msg, id, completed, skipStorage) {
  *
  */
 var $delTodo = function(e) {
-  console.log(e);
-  console.log({currentTarget:e.currentTarget});
   var todo = e.srcElement.closest("li");  
   var id = todo.getAttribute('data-id');
   todo.parentNode.removeChild(todo);
 
   // remove from localStorage
   var todos = JSON.parse(localStorage.getItem('todos')) || [];
-  console.log({remtodos:todos})
   if (todos) {
     for (var i = 0; i < todos.length; i++) {
       if (todos[i] && todos[i].id == id) {
-        //delete todos[i];
         todos.splice(i, 1) 
       }
     }
@@ -72,11 +67,9 @@ var $toggleTodo = function(e) {
   // remove from localStorage
   var id = todo.getAttribute('data-id');
   var todos = JSON.parse(localStorage.getItem('todos')) || [];
-  console.log({remtodos:todos})
   if (todos) {
     for (var i = 0; i < todos.length; i++) {
       if (todos[i] && todos[i].id == id) {
-        //delete todos[i];
         todos[i].completed = (newStatus)? true : false; 
       }
     }
