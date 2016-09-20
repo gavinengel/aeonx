@@ -30,10 +30,10 @@
       data-onmouseup: $Handler.testr;
     }    
     @onfocusout {
-      data-onfocusout: $Handler.blurTodo;
+      disabled: 'disabled';
     }
     @onmouseout {
-      data-onfocusout: $Handler.blurTodo;
+      disabled: 'disabled';
     }
   }
 }

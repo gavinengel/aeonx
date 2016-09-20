@@ -90,10 +90,11 @@ var $editTodo = function(e) {
 /**
  *
  */
+ /*
 var $blurTodo = function(e) {
   var target =  e.srcElement;
   target.disabled = true;
-}
+}*/
 
 
 
@@ -110,6 +111,6 @@ Handler = {
     addTodo: $addTodo,
     delTodo: $delTodo,
     toggleTodo: $toggleTodo,
-    editTodo: $editTodo,
-    blurTodo: $blurTodo
+    editTodo: $editTodo
+   // blurTodo: $blurTodo
 }
