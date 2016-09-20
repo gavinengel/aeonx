@@ -57,7 +57,7 @@
 	var $delegate = ''
 
 	var _data = {
-	    ver: '0.4.0',
+	    ver: '0.4.1',
 	    selectors: [],
 	    opts: {},
 	    e: {},
@@ -453,7 +453,7 @@
 
 	  /** tokenizer **/
 	  raw = raw.replace(/;/g, "; ") 
-	  raw = raw.replace(/{/g, " {") 
+	  raw = raw.replace(/{/g, " {") // why?  because leaving out space in this causes error:  .someclass{ 
 	  var tokens = raw.match(/\S+/g)
 	  if ($debug) console.log({tokens1: tokens})
 
@@ -876,17 +876,28 @@
 	 */
 	var _setAttribute = function(el, attribute, newValue) {
 	    tag = el.tagName.toLowerCase()
+
+	    var booleanAttribute = (attribute == 'disabled' || attribute == 'checked')? true : false;
+
 	    if (attribute == 'value' && tag != 'input') { 
 	        el.textContent = newValue
 	    }
 	    else { // attr, when a=value and tag=input
 	        if(el.hasAttribute( attribute ) == false) {
-	            var a = document.createAttribute( attribute )
-	            a.value = newValue
-	            el.setAttributeNode(a)
+	            if (!booleanAttribute || newValue) {
+	                var a = document.createAttribute( attribute )
+	                a.value = newValue
+	                el.setAttributeNode(a)
+	            }
 	        }
 	        else {
-	            el.setAttribute(attribute, newValue)
+	            if (booleanAttribute && !newValue) {
+	                el.removeAttribute(attribute)
+	                alert('removed attr');
+	            }
+	            else {
+	                el.setAttribute(attribute, newValue)
+	            }
 	        }
 	    }
 	}

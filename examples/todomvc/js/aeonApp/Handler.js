@@ -110,7 +110,7 @@ Handler = {
     clearCompleted: $clearCompleted,
     addTodo: $addTodo,
     delTodo: $delTodo,
-    toggleTodo: $toggleTodo,
-    editTodo: $editTodo
-   // blurTodo: $blurTodo
+    editTodo: $editTodo,
+   // blurTodo: $blurTodo,
+    toggleTodo: $toggleTodo
 }

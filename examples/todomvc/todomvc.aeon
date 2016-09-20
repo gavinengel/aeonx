@@ -24,7 +24,7 @@
   }
   .label {
     @ondblclick {
-      data-ondblclick: $Handler.editTodo;
+      disabled!: 'disabled';
     } 
     @onmouseup(button = 1;ctrlKey=true)  {
       data-onmouseup: $Handler.testr;
