@@ -38,9 +38,8 @@ var $addTodo = function(e, msg, id, completed, skipStorage) {
  */
 var $delTodo = function(e) {
   var todo = e.srcElement.closest("li");  
-  var id = todo.getAttribute('data-id');
   todo.parentNode.removeChild(todo);
-  _removeStore(id);
+  _removeStore(todo.getAttribute('data-id'));
 }
 
 
@@ -91,8 +90,7 @@ var $clearCompleted = function(e) {
   var elms = document.querySelectorAll( 'li.completed' ) // TODO use element.queryselectorall instead of document.qsa https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
   for( i=0; i < elms.length; i++ ) {
     elm = elms[i];
-    var id = elm.getAttribute('data-id');
-    _removeStore(id);
+    _removeStore(elm.getAttribute('data-id'));
     elm.parentNode.removeChild(elm); // TODO caniuse: remove();
   }
 }
