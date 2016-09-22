@@ -7,11 +7,11 @@ var $conditionr = require("./aeon-conditionr.js");
  * data tree
  */
 
-var $debug = true
+var $debug = false
 var $delegate = ''
 
 var _data = {
-    ver: '0.4.1',
+    ver: '0.4.2',
     selectors: [],
     opts: {},
     e: {},
@@ -172,7 +172,7 @@ var _execOnRule = function (selector, value, eventType, eventConds){
     
     // there are conditions, loop and add listeners
     if (eventConds.length) {
-        console.log('add _execOnRule '+eventType+' for multiple listeners: '+selector)
+        ///console.log('add _execOnRule '+eventType+' for multiple listeners: '+selector)
 
         ///for( i=0; i < eventConds.length; i++ ) {
             ///eventType = eventConds[i].eventType || eventConds[i].rgt
@@ -182,7 +182,7 @@ var _execOnRule = function (selector, value, eventType, eventConds){
 
     // otherwise add a single listener
     else {
-        console.log('add _execOnRule '+eventType+' for single listener: '+selector)
+        ///console.log('add _execOnRule '+eventType+' for single listener: '+selector)
         _addListeners(eventType, [], selector, value)
     }
 }
@@ -240,13 +240,13 @@ var _addListeners = function (eventType, eventConds, selector, value) {
         delegate.addEventListener(eventType, function(e) {
             for (var target=e.target; target && target!=this; target=target.parentNode) {
             // loop parent nodes from the target to the delegation node
-                console.log({line:604, target: target, selector:selector})
+                if ($debug) console.log({line:604, target: target, selector:selector})
                 if (target.matches(selector)) {
                     if (e != lastEvent) {
                         lastEvent = e;
-                        console.log('found!', selector)
-                        console.log(target)
-                        console.log({a:a, eId:eId, _data:_data})
+                        if ($debug) console.log('found!', selector)
+                        if ($debug) console.log(target)
+                        if ($debug) console.log({a:a, eId:eId, _data:_data})
 
                         eData = _data.eData[ eId ]
 

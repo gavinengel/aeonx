@@ -5,7 +5,6 @@
  * 
  */
 var $set = function(selatts, newValue, newOperator, opts, _data) {
-    
     // if a javascript element...
     if (selatts.charAt(0) == '`' && selatts.charAt(1) == '$') {
         rawTarget = _unstring(selatts).substr(1)
@@ -57,7 +56,6 @@ var $set = function(selatts, newValue, newOperator, opts, _data) {
             attribute = pieces[1].trim()
         }
         else {
-            console.log({_data:_data})
             selector = _data.selectors.join(' ')
             attribute = selatts
         }
@@ -69,11 +67,18 @@ var $set = function(selatts, newValue, newOperator, opts, _data) {
 
         if (!selector) debugger
 
-        /// modify all elements
-        var els = document.querySelectorAll( selector )
-        var i = 0
-        for( i=0; i < els.length; i++ ) {
-            _setAttribute(els[i], attribute, newValue)
+
+        if (typeof _data.opts != 'undefined') {
+            _setAttribute(_data.opts.e.target, attribute, newValue)
+        }
+        else {
+
+            /// modify all elements
+            var els = document.querySelectorAll( selector )
+            var i = 0
+            for( i=0; i < els.length; i++ ) {
+                _setAttribute(els[i], attribute, newValue)
+            }
         }
 
     }
@@ -103,7 +108,6 @@ var _setAttribute = function(el, attribute, newValue) {
         else {
             if (booleanAttribute && !newValue) {
                 el.removeAttribute(attribute)
-                alert('removed attr');
             }
             else {
                 el.setAttribute(attribute, newValue)

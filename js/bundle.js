@@ -53,11 +53,11 @@
 	 * data tree
 	 */
 
-	var $debug = false
+	var $debug = true
 	var $delegate = ''
 
 	var _data = {
-	    ver: '0.4.2',
+	    ver: '0.4.1',
 	    selectors: [],
 	    opts: {},
 	    e: {},
@@ -218,7 +218,7 @@
 	    
 	    // there are conditions, loop and add listeners
 	    if (eventConds.length) {
-	        ///console.log('add _execOnRule '+eventType+' for multiple listeners: '+selector)
+	        console.log('add _execOnRule '+eventType+' for multiple listeners: '+selector)
 
 	        ///for( i=0; i < eventConds.length; i++ ) {
 	            ///eventType = eventConds[i].eventType || eventConds[i].rgt
@@ -228,7 +228,7 @@
 
 	    // otherwise add a single listener
 	    else {
-	        ///console.log('add _execOnRule '+eventType+' for single listener: '+selector)
+	        console.log('add _execOnRule '+eventType+' for single listener: '+selector)
 	        _addListeners(eventType, [], selector, value)
 	    }
 	}
@@ -286,13 +286,13 @@
 	        delegate.addEventListener(eventType, function(e) {
 	            for (var target=e.target; target && target!=this; target=target.parentNode) {
 	            // loop parent nodes from the target to the delegation node
-	                if ($debug) console.log({line:604, target: target, selector:selector})
+	                console.log({line:604, target: target, selector:selector})
 	                if (target.matches(selector)) {
 	                    if (e != lastEvent) {
 	                        lastEvent = e;
-	                        if ($debug) console.log('found!', selector)
-	                        if ($debug) console.log(target)
-	                        if ($debug) console.log({a:a, eId:eId, _data:_data})
+	                        console.log('found!', selector)
+	                        console.log(target)
+	                        console.log({a:a, eId:eId, _data:_data})
 
 	                        eData = _data.eData[ eId ]
 
@@ -795,6 +795,7 @@
 	 * 
 	 */
 	var $set = function(selatts, newValue, newOperator, opts, _data) {
+	    
 	    // if a javascript element...
 	    if (selatts.charAt(0) == '`' && selatts.charAt(1) == '$') {
 	        rawTarget = _unstring(selatts).substr(1)
@@ -846,6 +847,7 @@
 	            attribute = pieces[1].trim()
 	        }
 	        else {
+	            console.log({_data:_data})
 	            selector = _data.selectors.join(' ')
 	            attribute = selatts
 	        }
@@ -857,18 +859,12 @@
 
 	        if (!selector) debugger
 
-
-	        if (typeof _data.opts != 'undefined') {
-	            _setAttribute(_data.opts.e.target, attribute, newValue)
-	        }
-	        else {
-
-	            /// modify all elements
-	            var els = document.querySelectorAll( selector )
-	            var i = 0
-	            for( i=0; i < els.length; i++ ) {
-	                _setAttribute(els[i], attribute, newValue)
-	            }
+	        /// modify all elements
+	        var els = document.querySelectorAll( selector )
+	        var i = 0
+	        for( i=0; i < els.length; i++ ) {
+	            alert(76);
+	            _setAttribute(els[i], attribute, newValue)
 	        }
 
 	    }
@@ -898,6 +894,7 @@
 	        else {
 	            if (booleanAttribute && !newValue) {
 	                el.removeAttribute(attribute)
+	                alert('removed attr');
 	            }
 	            else {
 	                el.setAttribute(attribute, newValue)
