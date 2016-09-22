@@ -1,5 +1,11 @@
+
+
 # aeonx TODO
 
+
+for todomvc all/active/completed buttons: https://jsfiddle.net/petrabarus/pPgS7/
+
+# ignore below....
 * saved completed status in localstorage
 
 * for TODOMVC app
@@ -16,3 +22,5 @@ works:    * why does not work when adding .destroy onclick to .aeon?
       someattr: $Handler.testr;
     }
   }
+
+
