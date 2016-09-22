@@ -40,18 +40,7 @@ var $delTodo = function(e) {
   var todo = e.srcElement.closest("li");  
   var id = todo.getAttribute('data-id');
   todo.parentNode.removeChild(todo);
-
-  // remove from localStorage
-  var todos = JSON.parse(localStorage.getItem('todos')) || [];
-  if (todos) {
-    for (var i = 0; i < todos.length; i++) {
-      if (todos[i] && todos[i].id == id) {
-        todos.splice(i, 1) 
-      }
-    }
-  }
-  localStorage.setItem('todos', JSON.stringify(todos));
-
+  _removeStore(id);
 }
 
 
@@ -64,7 +53,7 @@ var $toggleTodo = function(e) {
   newStatus = (currentStatus == 'completed')? '' : 'completed'
   todo.setAttribute('class', newStatus)
 
-  // remove from localStorage
+  // modify localStorage
   var id = todo.getAttribute('data-id');
   var todos = JSON.parse(localStorage.getItem('todos')) || [];
   if (todos) {
