@@ -67,16 +67,6 @@ var $toggleTodo = function(e) {
   return true
 }
 
-/**
- *
- */
- /*
-var $blurTodo = function(e) {
-  var target =  e.srcElement;
-  target.disabled = true;
-}*/
-
-
 
 var $clearCompleted = function(e) {
   var elms = document.querySelectorAll( 'li.completed' ) // TODO use element.queryselectorall instead of document.qsa https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
@@ -87,16 +77,11 @@ var $clearCompleted = function(e) {
   }
 }
 
-var $testr = function(e) {
-  alert('testr clicked!');
-}
-
 Handler = {
     clearCompleted: $clearCompleted,
     addTodo: $addTodo,
     delTodo: $delTodo,
-    toggleTodo: $toggleTodo,
-    testr: $testr,
+    toggleTodo: $toggleTodo
 }
 
 

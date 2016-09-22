@@ -31,9 +31,6 @@
     @ondblclick {
       disabled!: 'disabled';
     } 
-    @onmouseup(button = 1;ctrlKey=true)  {
-      data-onmouseup: $Handler.testr;
-    }    
     @onfocusout {
       disabled: 'disabled';
     }
