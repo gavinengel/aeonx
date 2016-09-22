@@ -858,7 +858,8 @@
 	        if (!selector) debugger
 
 
-	        if (typeof _data.opts != 'undefined') {
+	        if (selatts.indexOf('&') === -1 && typeof _data.opts != 'undefined') {
+	            console.log(72);
 	            _setAttribute(_data.opts.e.target, attribute, newValue)
 	        }
 	        else {

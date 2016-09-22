@@ -1,4 +1,9 @@
 .todoapp {
+  .toggle-all {
+    @onclick {
+      .todo-list & class!: "hidden";
+    }
+  }
   #entry {
     onsubmit: $Handler.addTodo;
   }
