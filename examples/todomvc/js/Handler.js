@@ -102,6 +102,8 @@ var $clearCompleted = function(e) {
   var elms = document.querySelectorAll( 'li.completed' ) // TODO use element.queryselectorall instead of document.qsa https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
   for( i=0; i < elms.length; i++ ) {
     elm = elms[i];
+    var id = elm.getAttribute('data-id');
+    _removeStore(id);
     elm.parentNode.removeChild(elm); // TODO caniuse: remove();
   }
 }
@@ -113,4 +115,18 @@ Handler = {
     editTodo: $editTodo,
    // blurTodo: $blurTodo,
     toggleTodo: $toggleTodo
+}
+
+
+/** remove from localStorage */
+var _removeStore = function(id) {
+  var todos = JSON.parse(localStorage.getItem('todos')) || [];
+  if (todos) {
+    for (var i = 0; i < todos.length; i++) {
+      if (todos[i] && todos[i].id == id) {
+        todos.splice(i, 1) 
+      }
+    }
+  }
+  localStorage.setItem('todos', JSON.stringify(todos));
 }
