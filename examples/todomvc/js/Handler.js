@@ -70,14 +70,6 @@ var $toggleTodo = function(e) {
 /**
  *
  */
-var $editTodo = function(e) {
-  var target =  e.srcElement;
-  target.disabled = (target.disabled == true)? false : true;
-}
-
-/**
- *
- */
  /*
 var $blurTodo = function(e) {
   var target =  e.srcElement;
@@ -103,7 +95,6 @@ Handler = {
     clearCompleted: $clearCompleted,
     addTodo: $addTodo,
     delTodo: $delTodo,
-    editTodo: $editTodo,
     toggleTodo: $toggleTodo,
     testr: $testr,
 }
