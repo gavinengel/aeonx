@@ -4,7 +4,6 @@
 
 
 * for todomvc all/active/completed buttons: https://jsfiddle.net/petrabarus/pPgS7/
-* hide button that looks like this: v
 
 # ignore below....
 * saved completed status in localstorage

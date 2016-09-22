@@ -95,13 +95,17 @@ var $clearCompleted = function(e) {
   }
 }
 
+var $testr = function(e) {
+  alert('testr clicked!');
+}
+
 Handler = {
     clearCompleted: $clearCompleted,
     addTodo: $addTodo,
     delTodo: $delTodo,
     editTodo: $editTodo,
-   // blurTodo: $blurTodo,
-    toggleTodo: $toggleTodo
+    toggleTodo: $toggleTodo,
+    testr: $testr,
 }
 
 

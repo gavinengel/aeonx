@@ -1,14 +1,21 @@
-/**/
 html[hash="active"] .todoapp .todo-list li.completed {
   display: none;
 }
-
-/**/
 html[hash="completed"] .todoapp .todo-list li {
   display: none;
 }
 html[hash="completed"] .todoapp .todo-list li.completed {
   display: block;
+}
+
+html[hash=""] .todoapp .filters #filter-all {
+  border-color: rgba(175, 47, 47, 0.2);
+}
+html[hash="active"] .todoapp .filters #filter-active {
+  border-color: rgba(175, 47, 47, 0.2);
+}
+html[hash="completed"] .todoapp .filters #filter-completed {
+  border-color: rgba(175, 47, 47, 0.2);
 }
 
 .todoapp .label {
