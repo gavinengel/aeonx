@@ -39,9 +39,9 @@ var _data = {
 /**
  *
  */
-var $runAeon = function(str) {
+var $run = function(str) {
     var obj = $translatr.parse(str)
-    return $run(obj)
+    return $runObj(obj)
 }
 
 /**
@@ -49,7 +49,7 @@ var $runAeon = function(str) {
  */
 var $runJson = function(str) {
     var obj = JSON.parse(str)
-    return $run(obj)
+    return $runObj(obj)
 }
 
 
@@ -58,7 +58,7 @@ var $runJson = function(str) {
 /**
  *
  */
-var $run = function(O, p, opts) {
+var $runObj = function(O, p, opts) {
     if (p) { _data.selectors.push(p); }
 
     for (var property in O) {
@@ -107,7 +107,7 @@ var _execObject = function(property, value) {
         _execRule(property, value)
     }
     else if (Object.keys(value).length > 0) {
-        $run(value, property, _data.opts);    
+        $runObj(value, property, _data.opts);    
     }
 }
 
@@ -197,7 +197,7 @@ var _execIfRule = function (property, value) {
         var pieces = pieces[1].split(')')
         _data.cond.raw = pieces[0].trim()
         if ( $conditionr.evalIf( _data.cond.raw ) ) { 
-            $run(value, null, _data.opts)
+            $runObj(value, null, _data.opts)
         }
 }
 
@@ -207,7 +207,7 @@ var _execIfRule = function (property, value) {
 var _execElseRule = function (value) {
     // obtain the the left, op, and right from the condition
     if (_data.cond.result === false) {
-        $run(value, null, _data.opts)
+        $runObj(value, null, _data.opts)
     }
     _data.cond.result = null
 }
@@ -256,7 +256,7 @@ var _addListeners = function (eventType, eventConds, selector, value) {
                         
                         if (!foundFail || !eData.conditions.length) { 
                             if ($debug) console.log('condition passed', {e:e, eData: eData})
-                            $run(eData.aeon, null, {el: e.currentTarget, e: e})
+                            $runObj(eData.aeon, null, {el: e.currentTarget, e: e})
 
                         }
                         else {
