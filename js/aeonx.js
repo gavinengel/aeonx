@@ -431,8 +431,7 @@
 	 */
 	aeonx = {
 	    debug: $debug,
-	    //run: $run,
-	    runAeon: $runAeon,
+	    run: $run,
 	    runJson: $runJson,
 	    fetch: $net.fetch
 	}
