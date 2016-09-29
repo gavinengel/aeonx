@@ -1,3 +1,11 @@
+.todoapp .filters li:first-child a {
+  background-color: blue;
+}
+
+.todoapp .filters a:target {
+  background-color: red;
+}
+
 html[hash="active"] .todoapp .todo-list li.completed {
   display: none;
 }
