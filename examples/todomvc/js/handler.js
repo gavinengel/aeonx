@@ -35,7 +35,6 @@ var $addTodo = function(e, msg, id, completed, skipStorage) {
   }
 }
 
-
 /**
  * Removes the list-item from the DOM as well as localStorage
  */
@@ -45,7 +44,6 @@ var $delTodo = function(e) {
   todo.parentNode.removeChild(todo);
   _removeStore(todo.getAttribute('data-id'));
 }
-
 
 /**
  * Toggle the complete/uncomplete of a list-item
@@ -71,7 +69,6 @@ var $toggleTodo = function(e) {
   return true
 }
 
-
 /**
  * Remove all completed items from both DOM and localStorage
  */
@@ -83,7 +80,6 @@ var $clearCompleted = function(e) {
     elm.parentNode.removeChild(elm); 
   }
 }
-
 
 /**
  * Remove item from localStorage
@@ -100,9 +96,7 @@ var _removeStore = function(id) {
   localStorage.setItem('todos', JSON.stringify(todos));
 }
 
-/**
- * Module export
- */
+/** Module export */
 handler = {
     clearCompleted: $clearCompleted,
     addTodo: $addTodo,
