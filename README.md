@@ -50,6 +50,10 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
  
  Aeon files can reduce the lines of source code, compared to popular JavaScript frameworks.  For simplistic frontend projects, using an Aeon file instead of a heavy framework, such as Angular, can reduce complexity and increase legibility.
  
- Let's compare a few popular implementations of TodoMVC to one written with Aeon.  For this comparison, we will look at custom SLOC (lines of source code) in each project.
+ Let's compare a few popular implementations of TodoMVC to one written with Aeon.  For this comparison, we will look at custom SLOC (lines of source code) in each project.  To count SLOC I included all files in: index.html, /js, and /css.
  
- 
+### project / custom SLOC
+* Backbone.js /
+* AngularJS /
+* Ember.js /
+* Aeon /
