@@ -18,6 +18,47 @@ Here are 3 examples of simple web applications using .aeon files:
 
 Aeon is a language to easily manipulate DOM Elements, Attributes, and Events.  Aeon files (example.aeon) are similar to CSS.  Its purpose is to create a language to simplify working with DOM events. [Here is an example](https://github.com/gavinengel/aeonx/blob/master/examples/todomvc/todomvc.aeon) of a single .aeon file.
 
+```
+.todoapp {
+  .toggle-all {
+    @onclick {
+      .todo-list & class!: "hidden";
+    }
+  }
+  #entry {
+    onsubmit: $handler.addTodo;
+  }
+  .clear-completed {
+    onclick: $handler.clearCompleted;
+  }
+  .filters {
+    a {
+      @ondblclick {
+        class!: "selected";
+      }
+    }
+  }
+  .toggle{
+    @onclick {
+      data-onclick: $handler.toggleTodo;
+    } 
+  }
+  .destroy {
+    @onclick {
+      data-onclick: $handler.delTodo;
+    }
+  }
+  .label {
+    @ondblclick {
+      disabled!: 'disabled';
+    } 
+    @on(focusout,mouseout) {
+      disabled: 'disabled';
+    }
+  }
+}
+```
+
 Its main inspration is from CSS, which can be seen in its key:value syntax.  It also is inspired by SASS and LESS projects, which can be seen in it's nested syntax.  
 
 The goal of Aeon is to provide a concise way to store DOM event programming.  It seeks to reduce the need of coding in Vanilla JavaScript or jQuery.  It is slightly enforcing in the way it expects functions are called.  For example, here is how a function is called from a separate custom JavaScript file:
