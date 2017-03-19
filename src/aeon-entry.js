@@ -1,4 +1,4 @@
-var $translatr = require("./aeon-translatr.js");
+var $parser = require("./aeon-parser.js");
 var $net = require("./aeon-net.js");
 var $domcrud = require("./aeon-domcrud.js");
 var $conditionr = require("./aeon-conditionr.js");
