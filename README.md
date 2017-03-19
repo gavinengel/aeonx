@@ -5,14 +5,6 @@ Allows running both .aeon and also .aeon.json definitions.
 
 Aeonx is a library for using .aeon definitions directly in the browser.
 
-Uses event delegation, when possible, on the .aeon definition root node.  This is instead of event listeners on target nodes.  This allows dynamically created DOM elements to make use of the same event listeners created at load time.  Without delegation, a background process is required to be able to auto-assign event listeners to new nodes.  This background process could be seen are both more resource intensive, and more complex.   
-
-Aeonx uses `DOMFocusIn` and `DOMFocusOut` in place of `focus` and `blur`.  This is because `focus` and `blur` do not bubble, and are not reliable for event delegation.
-
-The body-tag is default event delegator.  To use a different tag as the event delegator, pass the tag's id as a config option:
-
-  `aeonx.delegator = "someId";` 
-
 # What are .aeon files?
 
 Aeon files (example.aeon) are similar to CSS.  Its purpose is to create a language to simplify working with DOM events. [Here is an example](https://github.com/gavinengel/aeonx/blob/master/examples/todomvc/todomvc.aeon) of a single .aeon file.
@@ -62,3 +54,13 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
 * [Aeon](http://code.gavinengel.com/aeonx/examples/todomvc/) / 253 lines 
 
 Even without the heavier framework libraries, the Aeon implementation of TodoMVC implements the project goal.  Additionally, Aeon focuses on manipulating normal HTML5 attributes without new DOM syntax (for example, see the HTML of [Angular](https://github.com/tastejs/todomvc/blob/gh-pages/examples/angularjs/index.html), [Ember](https://github.com/tastejs/todomvc/blob/gh-pages/examples/emberjs/index.html), and [Knockout](https://github.com/tastejs/todomvc/blob/gh-pages/examples/knockoutjs/index.html)).  This allows for HTML to remain 100% valid.  This is helpful for many reasons, such as better text-editor linting, avoidance of mixing languages, as well as reducing time to switch between libraries/frameworks at a later day.
+
+# Event Delegation
+
+Uses event delegation, when possible, on the .aeon definition root node.  This is instead of event listeners on target nodes.  This allows dynamically created DOM elements to make use of the same event listeners created at load time.  Without delegation, a background process is required to be able to auto-assign event listeners to new nodes.  This background process could be seen are both more resource intensive, and more complex.   
+
+Aeonx uses `DOMFocusIn` and `DOMFocusOut` in place of `focus` and `blur`.  This is because `focus` and `blur` do not bubble, and are not reliable for event delegation.
+
+The body-tag is default event delegator.  To use a different tag as the event delegator, pass the tag's id as a config option:
+
+  `aeonx.delegator = "someId";` 
