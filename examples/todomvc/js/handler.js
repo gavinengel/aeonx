@@ -102,7 +102,7 @@ var _removeStore = function(id) {
 /**
  * Module export
  */
-Handler = {
+handler = {
     clearCompleted: $clearCompleted,
     addTodo: $addTodo,
     delTodo: $delTodo,

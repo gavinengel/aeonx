@@ -1,10 +1,10 @@
 {
   ".todoapp": {
     ".destroy": {
-      "onclick": "`$Handler.destroy`"
+      "onclick": "`$handler.destroy`"
     },
     ".clear-completed": {
-      "onclick": "`$Handler.clearCompleted`"
+      "onclick": "`$handler.clearCompleted`"
     }
   }
 }
