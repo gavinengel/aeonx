@@ -58,4 +58,4 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
 * [Ember.js](http://todomvc.com/examples/emberjs/) / 1281
 * [Knockout.js](http://todomvc.com/examples/knockoutjs/) / 254
 * [React](http://todomvc.com/examples/react/#/) / 520
-* [Aeon](http://code.gavinengel.com/aeonx/examples/todomvc/)) / 260
+* [Aeon](http://code.gavinengel.com/aeonx/examples/todomvc/) / 260
