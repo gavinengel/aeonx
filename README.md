@@ -52,13 +52,13 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
  
  Let's compare a few popular implementations of TodoMVC to one written with Aeon.  For this comparison, we will look at custom SLOC (lines of source code) in each project.  To count SLOC I included all files in: index.html, /js, and /css.
  
-### project / custom SLOC (fewer is better) / kilobyte size of library (fewer is better)
+### project / custom SLOC (fewer is better) 
 
-* [Ember.js](http://todomvc.com/examples/emberjs/) / 1281 lines /
-* [React](http://todomvc.com/examples/react/#/) / 520 lines /
-* [AngularJS](http://todomvc.com/examples/angularjs/#/) / 442 lines /
-* [Backbone.js](http://todomvc.com/examples/backbone/) / 423 lines /
-* [Knockout.js](http://todomvc.com/examples/knockoutjs/) / 254 lines /
-* [Aeon](http://code.gavinengel.com/aeonx/examples/todomvc/) / 253 lines /
+* [Ember.js](http://todomvc.com/examples/emberjs/) / 1281 lines 
+* [React](http://todomvc.com/examples/react/#/) / 520 lines 
+* [AngularJS](http://todomvc.com/examples/angularjs/#/) / 442 lines 
+* [Backbone.js](http://todomvc.com/examples/backbone/) / 423 lines 
+* [Knockout.js](http://todomvc.com/examples/knockoutjs/) / 254 lines 
+* [Aeon](http://code.gavinengel.com/aeonx/examples/todomvc/) / 253 lines 
 
 Even without the heavier framework libraries, the Aeon implementation of TodoMVC implements the project goal.  Additionally, Aeon focuses on manipulating normal HTML5 attributes without new DOM syntax (for example, see the HTML of [Angular](https://github.com/tastejs/todomvc/blob/gh-pages/examples/angularjs/index.html), [Ember](https://github.com/tastejs/todomvc/blob/gh-pages/examples/emberjs/index.html), and [Knockout](https://github.com/tastejs/todomvc/blob/gh-pages/examples/knockoutjs/index.html)).  This allows for HTML to remain 100% valid.  This is helpful for many reasons, such as better text-editor linting, avoidance of mixing languages, as well as reducing time to switch between libraries/frameworks at a later day.
