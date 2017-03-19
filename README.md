@@ -67,13 +67,6 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
 ## available rules
 - `@on{Event}`    aeon will add a event listener to each DOM node with your previously specified selector
 - `@on({Event},{Event},{Event})`	similar to above, except aeon adds event listener for each event-type
-- (for @if below, it must be inside a `@on{Event}`, as I don't want to delve into DOM mutations. )
-- `@if ( {expression} ) `     An expression that returns `true` causes if to process; An expression will look like these:
-  - `@if ( src )`             Single word; this is a attribute within the previously specified selector
-  - `@if ( #foo img & src )`  A `selector & attribute`; The new selector and attribute are used
-  - `@if ( $fooBarBaz )`      A function which has been assigned to global `aeon.ext.fooBarBaz`. 
-  
-
 
 
 ## function calls
