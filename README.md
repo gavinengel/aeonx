@@ -21,6 +21,7 @@ Its main inspration is from CSS, which can be seen in its key:value syntax.  It 
 
 The goal of Aeon is to provide a concise way to store DOM event programming.  It seeks to reduce the need of coding in Vanilla JavaScript or jQuery.  It is slightly enforcing in the way it expects functions are called.  For example, here is how a function is called from a separate custom JavaScript file:
 
+```
   /** inside example.aeon */
   #example-id {
     @onclick {
@@ -37,8 +38,7 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
   handler = {
       doSomething: $doSomething
   }
-
- 
+```
   
  Here are 3 examples of simple web applications using .aeon files:
  
