@@ -41,27 +41,8 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
 - `/:`	divide		``
 - `%:`	modulus		``
 - `: #foo`	foo.import (html link-tag template)		``
-- `#:`	set as num	``
-- `^:`	?		``
-- `_:` 	? 		``
-- `?:` 	?		``
-- `~:` 	?		``
-- `=:` 	?		``
-- `::` 	?		``
-- `;:` 	toggle ssv		``
-- `,:` 	toggle csv		``
-- `(:` 	?		``
-- `):` 	?		``
-- `":` 	?		``
-- `':` 	?		``
-- `$:` 	?		``
-- `@:` 	?		``
-- `<:` 	?		``
-- `>:` 	?		``
-- `\:` 	?		``
-- `.:` 	?		``
 - `!:`  toggle value    `class !: hidden;`
-- `&:`  concatenate     `data-full-string &: "some message;";`
+- `.:`  concatenate     `data-full-string .: "some message;";`
 
 
 ## calling functions
