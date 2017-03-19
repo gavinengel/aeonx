@@ -12,3 +12,44 @@ Aeonx uses `DOMFocusIn` and `DOMFocusOut` in place of `focus` and `blur`.  This 
 The body-tag is default event delegator.  To use a different tag as the event delegator, pass the tag's id as a config option:
 
   `aeonx.delegator = "someId";` 
+
+# What are .aeon files?
+
+Aeon files (example.aeon) are similar to CSS.  Its purpose is to create a language to simplify working with DOM events.
+
+Its main inspration is from CSS, which can be seen in its key:value syntax.  It also is inspired by SASS and LESS projects, which can be seen in it's nested syntax.  
+
+The goal of Aeon is to provide a concise way to store DOM event programming.  It seeks to reduce the need of coding in Vanilla JavaScript or jQuery.  It is slightly enforcing in the way it expects functions are called.  For example, here is how a function is called from a separate custom JavaScript file:
+
+  /** inside example.aeon */
+  #example-id {
+    @onclick {
+      class: $handler.doSomething;
+    }
+  }
+  
+  /** inside handler.js */
+  var doSomething = function(e) {
+    console.log("Here is the DOM event information", e);
+  }
+
+  // module export
+  handler = {
+      doSomething: $doSomething
+  }
+
+ 
+  
+ Here are 3 examples of simple web applications using .aeon files:
+ 
+ * [TodoMVC](http://code.gavinengel.com/aeonx/examples/todomvc/)
+ * [Calculator](http://code.gavinengel.com/aeonx/examples/calculator/)
+ * [String Manipulation](http://code.gavinengel.com/aeonx/examples/all-operators/)
+ 
+ ## How can .aeon files help?
+ 
+ Aeon files can reduce the lines of source code, compared to popular JavaScript frameworks.  For simplistic frontend projects, using an Aeon file instead of a heavy framework, such as Angular, can reduce complexity and increase legibility.
+ 
+ Let's compare a few popular implementations of TodoMVC to one written with Aeon.  For this comparison, we will look at custom SLOC (lines of source code) in each project.
+ 
+ 
