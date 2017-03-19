@@ -5,6 +5,15 @@ Allows running both .aeon and also .aeon.json definitions.
 
 Aeonx is a library for using .aeon definitions directly in the browser.
 
+## Examples
+
+Here are 3 examples of simple web applications using .aeon files:
+ 
+ * [TodoMVC](http://code.gavinengel.com/aeonx/examples/todomvc/)
+ * [Calculator](http://code.gavinengel.com/aeonx/examples/calculator/)
+ * [String Manipulation](http://code.gavinengel.com/aeonx/examples/all-operators/)
+ 
+
 ## What are .aeon files?
 
 Aeon is a language to easily manipulate DOM Elements, Attributes, and Events.  Aeon files (example.aeon) are similar to CSS.  Its purpose is to create a language to simplify working with DOM events. [Here is an example](https://github.com/gavinengel/aeonx/blob/master/examples/todomvc/todomvc.aeon) of a single .aeon file.
@@ -80,13 +89,7 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
   $stores.example: $filters.example;
 }
 ```
-  
- Here are 3 examples of simple web applications using .aeon files:
- 
- * [TodoMVC](http://code.gavinengel.com/aeonx/examples/todomvc/)
- * [Calculator](http://code.gavinengel.com/aeonx/examples/calculator/)
- * [String Manipulation](http://code.gavinengel.com/aeonx/examples/all-operators/)
- 
+
  ## How can .aeon files help?
  
  Aeon files can reduce the lines of source code, compared to popular JavaScript frameworks.  For simplistic frontend projects, using an Aeon file instead of a heavy framework, such as Angular, can reduce complexity and increase legibility.
