@@ -1,5 +1,8 @@
 
 /**
+ * Add a list-item to our todo list
+ * The list-item has a unique id added to its data-id attribute.
+ * Also adds to localStorage simultaneously, unless skipStorage = true
  */
 var $addTodo = function(e, msg, id, completed, skipStorage) {
   if (e) var msg = e.target[0].value;
@@ -12,7 +15,7 @@ var $addTodo = function(e, msg, id, completed, skipStorage) {
     var html = '<div class="view"><input class="toggle" type="checkbox" '+checked+'><input class="label" value="'+msg+'" disabled="disabled" />' +
       '<button class="destroy"></button> </div> <input class="edit" value="asdf">'
 
-    var id = id || Math.random().toString(36).substr(2, 9);
+    var id = id || Math.random().toString(36).substr(2, 10); // id holds a random 10-character base-36 number
     newTag.setAttribute('data-id', id);
 
     newStatus = (completed)? 'completed' : '';
@@ -34,7 +37,7 @@ var $addTodo = function(e, msg, id, completed, skipStorage) {
 
 
 /**
- *
+ * Removes the list-item from the DOM as well as localStorage
  */
 var $delTodo = function(e) {
   var todo = e.srcElement.closest("li");  
@@ -44,7 +47,7 @@ var $delTodo = function(e) {
 
 
 /**
- *
+ * Toggle the complete/uncomplete of a list-item
  */
 var $toggleTodo = function(e) {
   var todo = e.srcElement.closest("li");  
@@ -68,24 +71,22 @@ var $toggleTodo = function(e) {
 }
 
 
+/**
+ * Remove all completed items from both DOM and localStorage
+ */
 var $clearCompleted = function(e) {
-  var elms = document.querySelectorAll( 'li.completed' ) // TODO use element.queryselectorall instead of document.qsa https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelector
+  var elms = document.querySelectorAll( 'li.completed' ) 
   for( i=0; i < elms.length; i++ ) {
     elm = elms[i];
     _removeStore(elm.getAttribute('data-id'));
-    elm.parentNode.removeChild(elm); // TODO caniuse: remove();
+    elm.parentNode.removeChild(elm); 
   }
 }
 
-Handler = {
-    clearCompleted: $clearCompleted,
-    addTodo: $addTodo,
-    delTodo: $delTodo,
-    toggleTodo: $toggleTodo
-}
 
-
-/** remove from localStorage */
+/**
+ * Remove item from localStorage
+ */
 var _removeStore = function(id) {
   var todos = JSON.parse(localStorage.getItem('todos')) || [];
   if (todos) {
@@ -96,4 +97,14 @@ var _removeStore = function(id) {
     }
   }
   localStorage.setItem('todos', JSON.stringify(todos));
+}
+
+/**
+ * Module export
+ */
+Handler = {
+    clearCompleted: $clearCompleted,
+    addTodo: $addTodo,
+    delTodo: $delTodo,
+    toggleTodo: $toggleTodo
 }
