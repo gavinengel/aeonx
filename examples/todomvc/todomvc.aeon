@@ -31,10 +31,7 @@
     @ondblclick {
       disabled!: 'disabled';
     } 
-    @onfocusout {
-      disabled: 'disabled';
-    }
-    @onmouseout {
+    @on(focusout,mouseout) {
       disabled: 'disabled';
     }
   }

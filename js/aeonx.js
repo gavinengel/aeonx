@@ -217,20 +217,19 @@
 	var _execOnRule = function (selector, value, eventType, eventConds){
 	    
 	    // there are conditions, loop and add listeners
+	    var passConds = []
 	    if (eventConds.length) {
-	        ///console.log('add _execOnRule '+eventType+' for multiple listeners: '+selector)
-
-	        ///for( i=0; i < eventConds.length; i++ ) {
-	            ///eventType = eventConds[i].eventType || eventConds[i].rgt
-	            _addListeners(eventType, eventConds, selector, value)
-	        ///}
+	        passConds = eventConds
 	    }
 
-	    // otherwise add a single listener
-	    else {
-	        ///console.log('add _execOnRule '+eventType+' for single listener: '+selector)
-	        _addListeners(eventType, [], selector, value)
+	    // loop each eventType (it is possible to pass comma-delimited eventType)
+	    var pieces = eventType.split(',');
+
+	    for (var eventTypePiece of pieces) {
+	        if (eventTypePiece) _addListeners(eventTypePiece, passConds, selector, value)
 	    }
+
+
 	}
 
 
@@ -258,7 +257,6 @@
 	    _data.cond.result = null
 	}
 
-
 	/**
 	 *
 	 */
@@ -267,6 +265,8 @@
 	    ///var els = document.querySelectorAll( selector )
 	    var delegateSel = ($delegate)? $delegate : 'body' 
 	    var delegate = document.querySelectorAll( delegateSel )[0]      
+
+	console.log({addListeners:[eventType, eventConds, selector, value]});
 
 	    ///for (var i=0; i < els.length; i++ ) {
 	        newExec = {}
@@ -1075,7 +1075,14 @@
 	            if (cnd.oper && cnd.rgt) {
 	                if ($debug) console.log('3 part condition found', {e:e, eData: eData})
 
-	                if (!$compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
+	                // loop each eventType (it is possible to pass comma-delimited eventType)
+	                var pieces = cnd.rgt.split(',');
+	                var found = false;
+	                for (var eventTypePiece of pieces) {
+	                    if ($compare(e[cnd.lft], cnd.oper, eventTypePiece)) found = true;
+	                }
+
+	                if (!found) foundFail = true;
 	            }    
 	            else {
 	                if ($debug) console.log('1 part condition found', {e:e, eData: eData})
@@ -1084,6 +1091,8 @@
 	            }
 	        }
 	    }
+
+	console.log({foundFail:foundFail});
 
 	    return foundFail
 	}

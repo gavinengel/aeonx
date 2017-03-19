@@ -63,7 +63,14 @@ var $multiCompare = function(e, eData) {
             if (cnd.oper && cnd.rgt) {
                 if ($debug) console.log('3 part condition found', {e:e, eData: eData})
 
-                if (!$compare(e[cnd.lft], cnd.oper, cnd.rgt)) foundFail = true
+                // loop each eventType (it is possible to pass comma-delimited eventType)
+                var pieces = cnd.rgt.split(',');
+                var found = false;
+                for (var eventTypePiece of pieces) {
+                    if ($compare(e[cnd.lft], cnd.oper, eventTypePiece)) found = true;
+                }
+
+                if (!found) foundFail = true;
             }    
             else {
                 if ($debug) console.log('1 part condition found', {e:e, eData: eData})
@@ -72,6 +79,8 @@ var $multiCompare = function(e, eData) {
             }
         }
     }
+
+console.log({foundFail:foundFail});
 
     return foundFail
 }

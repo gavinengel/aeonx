@@ -171,20 +171,19 @@ var _execRule = function(property, value) {
 var _execOnRule = function (selector, value, eventType, eventConds){
     
     // there are conditions, loop and add listeners
+    var passConds = []
     if (eventConds.length) {
-        ///console.log('add _execOnRule '+eventType+' for multiple listeners: '+selector)
-
-        ///for( i=0; i < eventConds.length; i++ ) {
-            ///eventType = eventConds[i].eventType || eventConds[i].rgt
-            _addListeners(eventType, eventConds, selector, value)
-        ///}
+        passConds = eventConds
     }
 
-    // otherwise add a single listener
-    else {
-        ///console.log('add _execOnRule '+eventType+' for single listener: '+selector)
-        _addListeners(eventType, [], selector, value)
+    // loop each eventType (it is possible to pass comma-delimited eventType)
+    var pieces = eventType.split(',');
+
+    for (var eventTypePiece of pieces) {
+        if (eventTypePiece) _addListeners(eventTypePiece, passConds, selector, value)
     }
+
+
 }
 
 
@@ -212,7 +211,6 @@ var _execElseRule = function (value) {
     _data.cond.result = null
 }
 
-
 /**
  *
  */
@@ -221,6 +219,8 @@ var _addListeners = function (eventType, eventConds, selector, value) {
     ///var els = document.querySelectorAll( selector )
     var delegateSel = ($delegate)? $delegate : 'body' 
     var delegate = document.querySelectorAll( delegateSel )[0]      
+
+console.log({addListeners:[eventType, eventConds, selector, value]});
 
     ///for (var i=0; i < els.length; i++ ) {
         newExec = {}

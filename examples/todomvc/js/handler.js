@@ -40,6 +40,7 @@ var $addTodo = function(e, msg, id, completed, skipStorage) {
  * Removes the list-item from the DOM as well as localStorage
  */
 var $delTodo = function(e) {
+  console.log({e:e.type});
   var todo = e.srcElement.closest("li");  
   todo.parentNode.removeChild(todo);
   _removeStore(todo.getAttribute('data-id'));
