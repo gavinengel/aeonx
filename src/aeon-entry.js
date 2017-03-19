@@ -1,6 +1,6 @@
 var $parser = require("./aeon-parser.js");
 var $net = require("./aeon-net.js");
-var $domcrud = require("./aeon-domcrud.js");
+var $dom = require("./aeon-dom.js");
 var $conditionr = require("./aeon-conditionr.js");
 
 /**
@@ -75,12 +75,12 @@ var $runObj = function(O, p, opts) {
     
         // String?
         else if (typeof value === 'string' || value instanceof String) {
-            $domcrud.set(property, _unstringExec(value, _data.opts), null, null, _data)
+            $dom.set(property, _unstringExec(value, _data.opts), null, null, _data)
         }
     
         // Function?
         else if (typeof value === 'function') {
-            $domcrud.set(property, value, null, null, _data)    
+            $dom.set(property, value, null, null, _data)    
         }
 
         // Plain Object?
@@ -88,7 +88,7 @@ var $runObj = function(O, p, opts) {
             _execObject(property, value)
         }
         else if (typeof value === 'boolean' || typeof value === 'number') {
-            $domcrud.set(property, value, null, null, _data)    
+            $dom.set(property, value, null, null, _data)    
         }
         else {
             console.error('invalid value', value)
@@ -117,7 +117,7 @@ var _execObject = function(property, value) {
 var _execArray = function(property, value) {
     newValue = _unstringExec(value[1], _data.opts)
     newOperator = value[0]
-    $domcrud.set(property, newValue, newOperator, null, _data)
+    $dom.set(property, newValue, newOperator, null, _data)
 }
 
 /**
@@ -360,13 +360,13 @@ var _unstringExec = function(value, opts) {
             _data.src.attr = values[1].trim()
             _data.src.sel = values[0].trim()
 
-            value = $domcrud.get(_data.src.attr, _data.src.sel) 
+            value = $dom.get(_data.src.attr, _data.src.sel) 
         }
         // c) empty or attribute from same selector:         data-foo
         else {
             if (value.length) {
                 opts.el = opts.e.target
-                value = $domcrud.get(value, _data.selectors[0], opts)  // May 25th  
+                value = $dom.get(value, _data.selectors[0], opts)  // May 25th  
             }
             else {
                 value = ''
