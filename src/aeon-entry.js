@@ -40,7 +40,7 @@ var _data = {
  *
  */
 var $run = function(str) {
-    var obj = $translatr.parse(str)
+    var obj = $parser.parse(str)
     return $runObj(obj)
 }
 
