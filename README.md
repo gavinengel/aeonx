@@ -7,7 +7,7 @@ Aeonx is a library for using .aeon definitions directly in the browser.
 
 ## What are .aeon files?
 
-Aeon files (example.aeon) are similar to CSS.  Its purpose is to create a language to simplify working with DOM events. [Here is an example](https://github.com/gavinengel/aeonx/blob/master/examples/todomvc/todomvc.aeon) of a single .aeon file.
+Aeon is a language to easily manipulate DOM Elements, Attributes, and Events.  Aeon files (example.aeon) are similar to CSS.  Its purpose is to create a language to simplify working with DOM events. [Here is an example](https://github.com/gavinengel/aeonx/blob/master/examples/todomvc/todomvc.aeon) of a single .aeon file.
 
 Its main inspration is from CSS, which can be seen in its key:value syntax.  It also is inspired by SASS and LESS projects, which can be seen in it's nested syntax.  
 
@@ -30,6 +30,81 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
   handler = {
       doSomething: $doSomething
   }
+```
+
+### operators
+
+- `:`   save:           `src : "http://example.com/";`
+- `+:`  increment       `data-clicked +: 1;`
+- `-:`  decrement       `data-available-clicks -: 1;`
+- `*:`	multiply	``
+- `/:`	divide		``
+- `%:`	modulus		``
+- `: #foo`	foo.import (html link-tag template)		``
+- `#:`	set as num	``
+- `^:`	?		``
+- `_:` 	? 		``
+- `?:` 	?		``
+- `~:` 	?		``
+- `=:` 	?		``
+- `::` 	?		``
+- `;:` 	toggle ssv		``
+- `,:` 	toggle csv		``
+- `(:` 	?		``
+- `):` 	?		``
+- `":` 	?		``
+- `':` 	?		``
+- `$:` 	?		``
+- `@:` 	?		``
+- `<:` 	?		``
+- `>:` 	?		``
+- `\:` 	?		``
+- `.:` 	?		``
+- `!:`  toggle value    `class !: hidden;`
+- `&:`  concatenate     `data-full-string &: "some message;";`
+
+
+## calling functions
+
+```
+// method A
+#calculator {
+	.eval {
+		onclick: $onClickEq  // inserts string into onclick-attr; extension does the attr updating
+	}
+}
+
+// method B
+.eval {
+	@onclick {
+		.screen & value: $onClickEq // calls extension, then inserts return value to attribute
+	}
+}
+	
+```
+
+## available rules
+- `@on{Event}`    aeon will add a event listener to each DOM node with your previously specified selector
+- `@on({Event},{Event},{Event})`	similar to above, except aeon adds event listener for each event-type
+- (for @if below, it must be inside a `@on{Event}`, as I don't want to delve into DOM mutations. )
+- `@if ( {expression} ) `     An expression that returns `true` causes if to process; An expression will look like these:
+  - `@if ( src )`             Single word; this is a attribute within the previously specified selector
+  - `@if ( #foo img & src )`  A `selector & attribute`; The new selector and attribute are used
+  - `@if ( $fooBarBaz )`      A function which has been assigned to global `aeon.ext.fooBarBaz`. 
+  
+
+
+
+## function calls
+
+```
+#foo {
+  onclick: $handlers.example;
+  ondblclick: $handlers.example2;
+}
+@onclick {
+  $stores.example: $filters.example;
+}
 ```
   
  Here are 3 examples of simple web applications using .aeon files:
