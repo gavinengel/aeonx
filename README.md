@@ -53,7 +53,9 @@ The goal of Aeon is to provide a concise way to store DOM event programming.  It
  Let's compare a few popular implementations of TodoMVC to one written with Aeon.  For this comparison, we will look at custom SLOC (lines of source code) in each project.  To count SLOC I included all files in: index.html, /js, and /css.
  
 ### project / custom SLOC
-* Backbone.js /
-* AngularJS /
-* Ember.js /
-* Aeon /
+* [Backbone.js](http://todomvc.com/examples/backbone/) / 423
+* [AngularJS](http://todomvc.com/examples/angularjs/#/) / 442
+* [Ember.js](http://todomvc.com/examples/emberjs/) / 1281
+* [Knockout.js](http://todomvc.com/examples/knockoutjs/) / 254
+* [React](http://todomvc.com/examples/react/#/) / 520
+* [Aeon](http://code.gavinengel.com/aeonx/examples/todomvc/)) / 260
