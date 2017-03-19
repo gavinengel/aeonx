@@ -15,7 +15,7 @@ The body-tag is default event delegator.  To use a different tag as the event de
 
 # What are .aeon files?
 
-Aeon files (example.aeon) are similar to CSS.  Its purpose is to create a language to simplify working with DOM events.
+Aeon files (example.aeon) are similar to CSS.  Its purpose is to create a language to simplify working with DOM events. [Here is an example](https://github.com/gavinengel/aeonx/blob/master/examples/todomvc/todomvc.aeon) of a single .aeon file.
 
 Its main inspration is from CSS, which can be seen in its key:value syntax.  It also is inspired by SASS and LESS projects, which can be seen in it's nested syntax.  
 
