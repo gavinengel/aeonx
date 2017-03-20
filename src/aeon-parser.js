@@ -1,4 +1,4 @@
-var $debug = true
+var $debug = false;
 var _preOps = [ '+', '-', '*', '/', '%', '.', '$', '!' ]; // may be used before colon to form special operator
 
 var _tokenize = function (raw) {
