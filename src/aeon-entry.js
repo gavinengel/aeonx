@@ -11,7 +11,7 @@ var $debug = false
 var $delegate = ''
 
 var _data = {
-    ver: '0.4.2',
+    ver: '0.5.0',
     selectors: [],
     opts: {},
     e: {},
